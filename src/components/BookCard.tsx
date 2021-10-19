@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useHistory, useLocation } from "react-router-dom"
 import { deleteBookReq } from "../api/deleteBookReq"
+import { deleteCommentReq } from "../api/deleteCommentReq"
 import { getOneBookReq } from "../api/getOneBookReq"
 import { postCommentReq } from "../api/postCommentReq"
 import { setChapter } from "../redux/booksSlice"
@@ -26,7 +27,8 @@ import {
   CommentOwner,
   CommentText,
   CommentsForm,
-  ReplyAlert
+  ReplyAlert,
+  ReplyAlertInner
 } from "../style"
 
 
@@ -136,6 +138,14 @@ const BookCard = ({item}: any) => {
   const handleChangePhoto = (img: number) => {
     setPhoto(img)
   }
+
+  const handleDeleteComment = async (id: number) => {
+    const res: any = await deleteCommentReq(id)
+    if (res.status === 201) {
+      console.log(res)
+      dispatch(fetchComments())
+    }
+  }
  
   return (
     <div>
@@ -186,7 +196,19 @@ const BookCard = ({item}: any) => {
             commentsList.map(item =>
               <CommentLI key={item.id}>
                 <CommentOwner>
-                  User {item.owner} commented:
+                  {
+                    item.replyToUsername === null ? 
+                    `User ${item.owner} commented:` : 
+                    `User ${item.owner} replied to ${item.replyToUsername}`
+                  }
+                  {
+                    idState === item.ownerId ?
+                    <Button 
+                      deleteComment
+                      onClick={() => handleDeleteComment(item.id)}
+                    >Delete</Button> :
+                    ''
+                  }
                 </CommentOwner>
                 <CommentText>
                   {item.text}
@@ -198,10 +220,11 @@ const BookCard = ({item}: any) => {
             )
           }
         </CommentsUL>
+        <div>
         {reply ? 
           <ReplyAlert>
-            Replying to {replyTarget}
-            <Button onClick={handleReplyOff}>Cancel</Button>
+            <ReplyAlertInner>Replying to {replyTarget}</ReplyAlertInner>
+            <Button user onClick={handleReplyOff}>Cancel</Button>
           </ReplyAlert> :
           <ReplyAlert></ReplyAlert>
         }
@@ -211,7 +234,8 @@ const BookCard = ({item}: any) => {
             <Button primary type="submit">Send comment</Button>
           </CommentsForm> : ''
         }
-        {role === 'Admin' ? 
+        </div>
+        {role === 'Admin' ?
           <Button
             onClick={handleDelete}
           >Delete this book</Button> :

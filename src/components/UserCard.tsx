@@ -13,14 +13,18 @@ import {
   UserChangeForm,
   InputChange,
   ChangeButtons,
-  ErrorAlert
+  ErrorAlert,
+  UserHelper
 } from '../style'
 
 const UserCard = () => {
   const [isAdminShown, setIsAdminShown] = useState(false)
   const [targetField, setTargetField] = useState('')
+  const [updatedField, setUpdatedField] = useState('')
   const [inputValue, setInputValue] = useState('')
-  const [error, setError] = useState('');
+  const [secondInputValue, setSecondInputValue] = useState('')
+  const [isHelperShown, setIsHelperShown] = useState(false);
+  const [error, setError] = useState('')
   const dispatch = useAppDispatch()
   const location = useLocation()
   const username = useAppSelector(state => state.user.username)
@@ -43,24 +47,30 @@ const UserCard = () => {
   }, [isExists])
 
   const handleChange = (e:any) => {
-    setInputValue(e.currentTarget.value)
+    if (e.currentTarget.id === 'secondInp') {
+      setSecondInputValue(e.currentTarget.value)
+    } else {
+      setInputValue(e.currentTarget.value)
+    }
   }
 
   const handleChangeUserData = (e:any) => {
+    setInputValue('')
+    setSecondInputValue('')
     setIsAdminShown(false)
     setError('')
     switch (e.target.name) {
       case 'username':
-        setTargetField('username')
+        setTargetField('Username')
         break
       case 'email':
-        setTargetField('email')
+        setTargetField('Email')
         break
       case 'password':
-        setTargetField('password')
+        setTargetField('Password')
         break
       case 'dob':
-        setTargetField('dob')
+        setTargetField('Date of birth')
         break
     }
   }
@@ -76,16 +86,26 @@ const UserCard = () => {
         res = await editUserReq('email', inputValue)
       }
       else if (e.target.id === 'password-button') {
-        res = await editUserReq('password', inputValue)
+        if (inputValue === secondInputValue) {
+          res = await editUserReq('password', inputValue)
+        } else {
+          setError('Passwords are not equal')
+          setInputValue('')
+          setSecondInputValue('')
+          return
+        }
       }
       else if (e.target.id === 'dob-button') {
         res = await editUserReq('dob', inputValue)
       }
       setInputValue('')
       if (res && res.status === 200) {
+        setUpdatedField(targetField)
+        handleShowHelper()
         setTargetField('')
         setError('')
         dispatch(fetchUser())
+
       } else if (res) {
         setError(res)
       }
@@ -108,6 +128,12 @@ const UserCard = () => {
     isAdminShown ? setIsAdminShown(false) : setIsAdminShown(true)
   }
 
+  const handleShowHelper = () => {
+    setIsHelperShown(true)
+    setTimeout(() => {
+      setIsHelperShown(false)
+    }, 3000);
+  }
 
   return (
     <Container user>
@@ -150,16 +176,16 @@ const UserCard = () => {
       >Sign out</Button>  
       </div>
       {targetField ?
-        (targetField === 'username' ?
+        (targetField === 'Username' ?
         <UserChangeForm>
           <p>New username:</p>
           <InputChange
             value={inputValue}
             onChange={handleChange}
             type="text" 
-            placeholder="username"
+            placeholder="New username"
             name="username-input"
-            autoFocus 
+            required 
           />
           <ChangeButtons>
             <Button type="submit" id="username-button" primary onClick={handleSubmit}>Submit</Button>
@@ -167,16 +193,16 @@ const UserCard = () => {
           </ChangeButtons>
           <ErrorAlert>{error}</ErrorAlert>
         </UserChangeForm> :
-        targetField === 'email' ?
+        targetField === 'Email' ?
         <UserChangeForm>
           <p>New email:</p>
           <InputChange 
             value={inputValue}
             onChange={handleChange}
-            type="text" 
-            placeholder="email"
+            type="email" 
+            placeholder="New email"
             name="email-input"
-            autoFocus 
+            required 
           />
           <ChangeButtons>
             <Button type="submit" id="email-button" primary onClick={handleSubmit}>Submit</Button>
@@ -184,16 +210,24 @@ const UserCard = () => {
           </ChangeButtons>
           <ErrorAlert>{error}</ErrorAlert>
         </UserChangeForm> :
-        targetField === 'password' ?
+        targetField === 'Password' ?
         <UserChangeForm>
           <p>New password:</p>
           <InputChange
             value={inputValue}
             onChange={handleChange}
-            type="text" 
-            placeholder="password"
+            type="password" 
+            placeholder="New password"
             name="password-input"
-            autoFocus
+            required
+          />
+          <InputChange
+            id="secondInp"
+            value={secondInputValue}
+            onChange={handleChange}
+            type="password" 
+            placeholder="Repeat password"
+            required
           />
           <ChangeButtons>
             <Button type="submit" id="password-button" primary onClick={handleSubmit}>Submit</Button>
@@ -208,9 +242,8 @@ const UserCard = () => {
           onChange={handleChange}
           type="date" 
           date
-          placeholder="dob"
           name="dob-input"
-          autoFocus 
+          required 
         />
         <ChangeButtons>
           <Button type="submit" id="dob-button" primary onClick={handleSubmit}>Submit</Button>
@@ -220,6 +253,7 @@ const UserCard = () => {
         </UserChangeForm>) : ''
       }
         {isAdminShown ? <AdminForm /> : ''}
+        <UserHelper shown={isHelperShown ? true : false}>{updatedField} has been updated</UserHelper>
     </Container>
   )
 }

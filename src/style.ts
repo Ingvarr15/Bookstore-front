@@ -32,9 +32,27 @@ export const Container = styled.div<any>`
   justify-content: space-between;
   align-items: center;
   ${props => props.user && `
+    position: relative;
     align-items: flex-start;
     flex-direction: row;
     justify-content: start;
+  `}
+`
+
+export const UserHelper = styled.div<any>`
+  display: none;
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+  z-index: 1000;
+  padding: 10px;
+  border: 2px solid #3f8f38;
+  border-radius: 3px;
+  background: #e7ffe6;
+  color: #3f8f38;
+  font-weight: 700;
+  ${props => props.shown && `
+    display: block;
   `}
 `
 
@@ -149,7 +167,7 @@ export const ReplyInner = styled.span<any>`
 `
 
 export const Button = styled.button<any>`
-  padding: 5px 5px;
+  
   font-size: 16px;
   background: transparent;
   font-family: 'Roboto', sans-serif;
@@ -178,6 +196,11 @@ export const Button = styled.button<any>`
   `}
   ${props => props.sign && `
     margin-top: 30px;
+  `}
+  ${props => props.deleteComment && `
+    padding: 5px 5px;
+    font-size: 12px;
+    border-width: 1px;
   `}
 `
 
@@ -409,6 +432,8 @@ export const CommentsContainer = styled.div<any>`
 `
 
 export const CommentOwner = styled.div<any>`
+  display: flex;
+  justify-content: space-between;
   padding-bottom: 10px;
   position: relative;
   font-weight: 700;
@@ -448,6 +473,7 @@ export const CommentsForm = styled.form<any>`
 `
 
 export const ReplyAlert = styled.div<any>`
+  align-self: ;
   min-height: 33px
 `
 
@@ -525,4 +551,9 @@ export const AdminCardSelect = styled.select<any>`
   border-radius: 3px;
   outline: none;
   background: transparent;
+`
+
+export const ReplyAlertInner = styled.span<any>`
+  font-weight: 700;
+  color: rgb(139 45 45);
 `
