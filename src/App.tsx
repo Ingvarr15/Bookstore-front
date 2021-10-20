@@ -38,8 +38,7 @@ import {
   ReplyUL,
   ReplyLogo,
   Logo,
-  ReplyInner,
-  Container
+  Container,
 } from './style';
 
 
@@ -183,7 +182,9 @@ function App() {
       <MainContainer>
         <NavBar>
           <Container>
-          <Logo>Book Store</Logo>
+          <NavLink logo to="/" onClick={() => changeChapter('/')}>
+            <Logo>Book Store</Logo>
+          </NavLink>
           <NavUL>
           {!isRepliesLoading && !isUserInfoLoading && isAuthorized ? 
             <NavListItem onClick={handleRepliesToggle}>

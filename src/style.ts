@@ -1,5 +1,6 @@
 import styled, { createGlobalStyle } from 'styled-components'
 import { Link } from 'react-router-dom'
+import AfterImg from './ornament.png'
 
 export const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
@@ -27,7 +28,7 @@ export const CurrentHeading = styled.h1<any>`
   text-align: center;
   position: relative;
   display: inline-block;
-  &:before {
+  &:after {
     content: "";
     display: block;
     width: 110%;
@@ -36,7 +37,7 @@ export const CurrentHeading = styled.h1<any>`
     top: 48%;
     left: 50%;
     transform: translateX(-50%) translateY(-48%);
-    background: url("./ornament.png") no-repeat;
+    background: url(${AfterImg}) no-repeat;
     background-size: 100%;
   }
 `
@@ -170,6 +171,12 @@ export const NavLink = styled(Link)<any>`
     background: #742525;
   }
   transition: all 0.2s linear;
+  ${props => props.logo && `
+    padding: 0;
+    &:hover {
+      background: 0;
+    }
+  `}
   ${props => props.reply && `
   padding: 5px;
   display: flex;
