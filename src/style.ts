@@ -41,6 +41,19 @@ export const CurrentHeading = styled.h1<any>`
   }
 `
 
+export const AvatarContainer = styled.div<any>`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+`
+
+export const Avatar = styled.img<any>`
+  max-width: 150px;
+  padding: 3px;
+  border: 2px solid #000000;
+  border-radius: 3px;
+`
+
 export const UserInner = styled.div<any>`
   margin-left: 200px;
 `
@@ -234,6 +247,9 @@ export const Button = styled.button<any>`
   `}
   ${props => props.search && `
     margin-left: 5px;
+  `}
+  ${props => props.avatar && `
+    margin-top: 10px;
   `}
   ${props => props.user && `
     margin-left: 5px;

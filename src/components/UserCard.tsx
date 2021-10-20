@@ -3,7 +3,7 @@ import { fetchUser, setIsAuthorized } from '../redux/userSlice'
 import { useHistory, useLocation } from 'react-router-dom'
 import { signOutReq } from '../api/signOutReq'
 import { editUserReq } from '../api/editUserReq'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import AdminForm from './AdminForm'
 import { setChapter } from '../redux/booksSlice'
 import { 
@@ -17,7 +17,9 @@ import {
   UserHelper,
   CurrentHeading,
   HeadingContainer,
-  UserInner
+  UserInner,
+  Avatar,
+  AvatarContainer
 } from '../style'
 
 const UserCard = () => {
@@ -35,6 +37,7 @@ const UserCard = () => {
   const dob = useAppSelector(state => state.user.dob)
   const role = useAppSelector(state => state.user.role)
   const isExists = useAppSelector(state => state.user.isExists)
+  const avatar  =useAppSelector(state => state.user.avatar)
 
   useEffect(() => {
     dispatch(fetchUser())
@@ -63,6 +66,9 @@ const UserCard = () => {
     setIsAdminShown(false)
     setError('')
     switch (e.target.name) {
+      case 'avatar':
+        setTargetField('Avatar')
+        break
       case 'username':
         setTargetField('Username')
         break
@@ -78,10 +84,30 @@ const UserCard = () => {
     }
   }
 
+  const fileRef = useRef<any>(null)
+
   const handleSubmit = async (e:any) => {
     e.preventDefault()
     console.log(e)
     let res
+      if (e.target.id === 'avatar-button') {
+        const fetchData = async (uint8Array: any) => {
+          try {
+            const res = await editUserReq('avatar', uint8Array)
+          } catch (error) {
+            console.error(error)
+          }
+        }
+        if (!fileRef.current) return void null
+    
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          const uint8Array = new Uint8Array(reader.result as any)
+          fetchData(uint8Array)
+        }
+        reader.readAsArrayBuffer(fileRef.current[0])
+      }
+
       if (e.target.id === 'username-button') {
         res = await editUserReq('username', inputValue)
       }
@@ -144,6 +170,14 @@ const UserCard = () => {
         <CurrentHeading>User Page</CurrentHeading>
       </HeadingContainer>
       <UserInner>
+        <AvatarContainer>
+          <Avatar src={avatar === null ? './avatar.png' : avatar} alt="" />
+          <Button
+            avatar
+            name="avatar"
+            onClick={handleChangeUserData}
+          >Change avatar</Button>
+        </AvatarContainer>
       <UserProp>Your username:</UserProp>
       <p>{username}</p>
       <Button
@@ -197,6 +231,20 @@ const UserCard = () => {
             <Button user onClick={handleCancel}>Cancel</Button>
           </ChangeButtons>
           <ErrorAlert>{error}</ErrorAlert>
+        </UserChangeForm> :
+        targetField === 'Avatar' ? 
+        <UserChangeForm>
+          <input
+            onChange={(e: any) => fileRef.current = e.target.files}
+            accept="image/*"
+            type="file"
+            id="button-file"
+            required
+          />
+          <ChangeButtons>
+            <Button type="submit" id="avatar-button" primary onClick={handleSubmit}>Submit</Button>
+            <Button user onClick={handleCancel}>Cancel</Button>
+          </ChangeButtons>
         </UserChangeForm> :
         targetField === 'Email' ?
         <UserChangeForm>
