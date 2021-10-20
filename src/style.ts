@@ -20,8 +20,40 @@ export const Logo = styled.span<any>`
   user-select: none;
 `
 
+export const CurrentHeading = styled.h1<any>`
+  margin-left: 30px;
+  margin-bottom: 50px;
+  min-width: 158px;
+  text-align: center;
+  position: relative;
+  display: inline-block;
+  &:before {
+    content: "";
+    display: block;
+    width: 110%;
+    height: 345%;
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-48%);
+    background: url("./ornament.png") no-repeat;
+    background-size: 100%;
+  }
+`
+
+export const UserInner = styled.div<any>`
+  margin-left: 200px;
+`
+
+export const HeadingContainer = styled.div<any>`
+  position: absolute;
+  top: 0;
+  left: 0;
+`
+
 export const MainContainer = styled.div<any>`
-  margin-top: 70px;
+  position: relative;
+  margin-top: 85px;
 `
 
 export const Container = styled.div<any>`
@@ -36,6 +68,10 @@ export const Container = styled.div<any>`
     align-items: flex-start;
     flex-direction: row;
     justify-content: start;
+  `}
+  ${props => props.books && `
+    position: relative;
+    display: block
   `}
 `
 
@@ -109,7 +145,7 @@ export const NavUL = styled.ul<any>`
 export const NavLink = styled(Link)<any>`
   text-decoration: none;
   color: #ffffff;
-  padding: 27px 15px;
+  padding: 16.5px 15px;
   font-weight: 700;
   cursor: pointer;
   &:hover {
@@ -132,14 +168,14 @@ export const NavListItem = styled.li<any>`
 
 export const Replies = styled.div<any>`
   position: absolute;
-  top: 54px;
+  top: 34px;
   right: 145px;
   background: linear-gradient(0deg, rgba(139,45,45,1) 0%, rgba(204,65,71,1) 100%);
   border-radius: 3px;
 `
 
 export const ReplyLogo = styled.span<any>`
-  padding: 27px 15px;
+  padding: 16.5px 15px;
   margin: 0;
   cursor: pointer;
   font-weight: 700;
@@ -213,19 +249,13 @@ export const Button = styled.button<any>`
   `}
 `
 
-export const BooksContainer = styled.div<any>`
-    position: relative;
-    max-width: 1600px;
-    margin: 0 auto;
-`
-
 export const SearchContainer = styled.div<any>`
   padding: 0 10px;
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 58px;
-  left: 0;
+  top: 115px;
+  left: 24px;
   z-index: 1000;
   border: 1px solid #cc4147;
 `

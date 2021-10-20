@@ -28,10 +28,12 @@ import {
   BookDescription,
   UpperSection,
   LowerSection,
-  BooksContainer,
   BookCardImage,
   FromToContainer,
-  SearchButtons
+  SearchButtons,
+  CurrentHeading,
+  HeadingContainer,
+  Container
 } from '../style'
 
 const MainPage = () => {
@@ -213,8 +215,10 @@ const MainPage = () => {
   }
   
   return (
-    <BooksContainer>
-      <h1>Main Page</h1>
+    <Container books>
+      <HeadingContainer>
+        <CurrentHeading>Main Page</CurrentHeading>
+      </HeadingContainer>
       <SearchContainer>
         <SearchElem>
           <span>Order: </span>
@@ -407,7 +411,7 @@ const MainPage = () => {
         {!isBooksLoading ?
           <Pagination /> : ''
         }
-    </BooksContainer>
+    </Container>
   )
 }
 

@@ -14,7 +14,10 @@ import {
   InputChange,
   ChangeButtons,
   ErrorAlert,
-  UserHelper
+  UserHelper,
+  CurrentHeading,
+  HeadingContainer,
+  UserInner
 } from '../style'
 
 const UserCard = () => {
@@ -137,8 +140,10 @@ const UserCard = () => {
 
   return (
     <Container user>
-      <div>
-      <h1>User Page</h1>
+      <HeadingContainer>
+        <CurrentHeading>User Page</CurrentHeading>
+      </HeadingContainer>
+      <UserInner>
       <UserProp>Your username:</UserProp>
       <p>{username}</p>
       <Button
@@ -174,7 +179,7 @@ const UserCard = () => {
         onClick={handleSignOut}
         user
       >Sign out</Button>  
-      </div>
+      </UserInner>
       {targetField ?
         (targetField === 'Username' ?
         <UserChangeForm>
