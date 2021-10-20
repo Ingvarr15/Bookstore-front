@@ -44,7 +44,7 @@ export const CurrentHeading = styled.h1<any>`
 export const AvatarContainer = styled.div<any>`
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: center;
 `
 
 export const Avatar = styled.img<any>`
@@ -56,6 +56,7 @@ export const Avatar = styled.img<any>`
 
 export const UserInner = styled.div<any>`
   margin-left: 200px;
+  display: flex;
 `
 
 export const HeadingContainer = styled.div<any>`
@@ -106,11 +107,15 @@ export const UserHelper = styled.div<any>`
 `
 
 export const UserChangeForm = styled.form<any>`
-  margin-top: 75px;
   margin-left: 50px;
   border: 2px solid #cc4147;
   border-radius: 3px;
   padding: 10px;
+  ${props => props.avatar && `
+    position: absolute;
+    bottom: -130px;
+    left: 170px;
+  `}
 `
 
 export const InputChange = styled.input<any>`
@@ -558,8 +563,20 @@ export const ReplyAlert = styled.div<any>`
   min-height: 33px
 `
 
-export const UserProp = styled.p<any>`
+export const UserProp = styled.span<any>`
   font-weight: 700;
+`
+
+export const UserPropContainer = styled.div<any>`
+  margin-bottom: 5px;
+`
+
+export const UserParagraph = styled.div<any>`
+  margin: 5px 0;
+`
+
+export const UserInfoContainer = styled.div<any>`
+  margin-left: 20px;
 `
 
 export const InputSign = styled.input<any>`
@@ -589,7 +606,6 @@ export const AdminFormContainer = styled.form<any>`
   display: flex;
   flex-direction: column;
   padding: 10px;
-  margin-top: 75px;
   margin-left: 50px;
   border: 2px solid #cc4147;
   border-radius: 3px;

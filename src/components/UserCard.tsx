@@ -19,7 +19,10 @@ import {
   HeadingContainer,
   UserInner,
   Avatar,
-  AvatarContainer
+  AvatarContainer,
+  UserPropContainer,
+  UserParagraph,
+  UserInfoContainer
 } from '../style'
 
 const UserCard = () => {
@@ -37,7 +40,7 @@ const UserCard = () => {
   const dob = useAppSelector(state => state.user.dob)
   const role = useAppSelector(state => state.user.role)
   const isExists = useAppSelector(state => state.user.isExists)
-  const avatar  =useAppSelector(state => state.user.avatar)
+  const avatar = useAppSelector(state => state.user.avatar)
 
   useEffect(() => {
     dispatch(fetchUser())
@@ -93,17 +96,33 @@ const UserCard = () => {
       if (e.target.id === 'avatar-button') {
         const fetchData = async (uint8Array: any) => {
           try {
-            const res = await editUserReq('avatar', uint8Array)
+            const response = await editUserReq('avatar', uint8Array)
+            return response
           } catch (error) {
             console.error(error)
           }
         }
-        if (!fileRef.current) return void null
+        if (!fileRef.current || !fileRef.current[0].type.includes('image')) {
+          setError('You should pick a picture')
+          return void null
+        }
+
+        console.log(fileRef.current[0].type)
     
         const reader = new FileReader()
-        reader.onloadend = () => {
+        reader.onloadend = async () => {
           const uint8Array = new Uint8Array(reader.result as any)
-          fetchData(uint8Array)
+          res = await fetchData(uint8Array)
+          if (res && res.status === 200) {
+            setUpdatedField(targetField)
+            handleShowHelper()
+            setTargetField('')
+            setError('')
+            dispatch(fetchUser())
+            fileRef.current = null
+          } else if (res) {
+            setError(res)
+          }
         }
         reader.readAsArrayBuffer(fileRef.current[0])
       }
@@ -178,41 +197,55 @@ const UserCard = () => {
             onClick={handleChangeUserData}
           >Change avatar</Button>
         </AvatarContainer>
-      <UserProp>Your username:</UserProp>
-      <p>{username}</p>
-      <Button
-        name="username"
-        onClick={handleChangeUserData}
-      >Change username</Button>
-      <Button
-        user
-        name="password"
-        onClick={handleChangeUserData}
-      >Change password</Button>
-      <UserProp>Your email:</UserProp>
-      <p>{email}</p>
-      <Button
-        name="email"
-        onClick={handleChangeUserData}
-      >Change email</Button>
-      <UserProp>Date of birth:</UserProp>
-      <p>{dob}</p>
-      <Button
-        name="dob"
-        onClick={handleChangeUserData}
-      >Change date of birth</Button>
-      <UserProp>Your role:</UserProp>
-      <p>{role}</p>
-      { role === 'Admin' ? 
-        <Button
-          onClick={handleAdmin}
-        >Admin Card</Button> :
-        ''
-      }
-      <Button
-        onClick={handleSignOut}
-        user
-      >Sign out</Button>  
+        <UserInfoContainer>
+          <UserParagraph>
+            <UserPropContainer>
+              <UserProp>Username: </UserProp>{username}
+            </UserPropContainer>
+            <Button
+              name="username"
+              onClick={handleChangeUserData}
+            >Change username</Button>
+            <Button
+              user
+              name="password"
+              onClick={handleChangeUserData}
+            >Change password</Button>
+          </UserParagraph>
+          <UserParagraph>
+            <UserPropContainer>
+              <UserProp>Email: </UserProp>{email}
+            </UserPropContainer>
+            <Button
+              name="email"
+              onClick={handleChangeUserData}
+            >Change email</Button>
+          </UserParagraph>
+          <UserParagraph>
+            <UserPropContainer>
+              <UserProp>Date of birth: </UserProp>{dob}
+            </UserPropContainer>
+            <Button
+              name="dob"
+              onClick={handleChangeUserData}
+            >Change date of birth</Button>
+          </UserParagraph>
+          <UserParagraph>
+            <UserPropContainer>
+              <UserProp>Role: </UserProp>{role}
+            </UserPropContainer>
+            { role === 'Admin' ? 
+              <Button
+                onClick={handleAdmin}
+              >Admin Card</Button> :
+              ''
+            }
+            <Button
+              onClick={handleSignOut}
+              user
+            >Sign out</Button>
+          </UserParagraph>
+        </UserInfoContainer>
       </UserInner>
       {targetField ?
         (targetField === 'Username' ?
@@ -233,7 +266,7 @@ const UserCard = () => {
           <ErrorAlert>{error}</ErrorAlert>
         </UserChangeForm> :
         targetField === 'Avatar' ? 
-        <UserChangeForm>
+        <UserChangeForm avatar>
           <input
             onChange={(e: any) => fileRef.current = e.target.files}
             accept="image/*"
@@ -245,6 +278,7 @@ const UserCard = () => {
             <Button type="submit" id="avatar-button" primary onClick={handleSubmit}>Submit</Button>
             <Button user onClick={handleCancel}>Cancel</Button>
           </ChangeButtons>
+          <ErrorAlert>{error}</ErrorAlert>
         </UserChangeForm> :
         targetField === 'Email' ?
         <UserChangeForm>

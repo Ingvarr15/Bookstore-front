@@ -12,6 +12,7 @@ export const editUserReq = async (targetField: any, value: any) => {
             avatar: [...value]
           }
         })
+        console.log(res)
         return res
       }
       catch (error: any) {
