@@ -213,7 +213,7 @@ const BookCard = ({item}: any) => {
                 <CommentText>
                   {item.text}
                 </CommentText>
-                  {idState !== item.ownerId && item.ownerId !== null ?
+                  {idState !== item.ownerId && item.ownerId !== null && !isTokenChecking && isAuthorized ?
                 <Button onClick={() => handleReplyOn(item.ownerId, item.owner)}>Reply</Button> : ''
               }
               </CommentLI>

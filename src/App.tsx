@@ -195,9 +195,11 @@ function App() {
                     repliesState.map((item: any) => 
                     <NavLink reply to={`/book/${item.book}`} key={`rl${item.id}`} onClick={() => changeChapter(`/book/${item.id}`)}>
                       <ReplyItem key={`r${item.id}`} onClick={() => dispatch(fetchReplies())}>
-                        <ReplyInner>
-                          User {item.owner} replied to you: "{item.text}"
-                        </ReplyInner>
+                          User {item.owner} replied to you: "{
+                            item.text.length > 4 ?
+                            item.text.substring(0, 5) + '...' :
+                            item.text
+                          }"
                       </ReplyItem>
                     </NavLink>
                     )

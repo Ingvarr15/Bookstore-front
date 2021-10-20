@@ -29,7 +29,9 @@ import {
   UpperSection,
   LowerSection,
   BooksContainer,
-  BookCardImage
+  BookCardImage,
+  FromToContainer,
+  SearchButtons
 } from '../style'
 
 const MainPage = () => {
@@ -215,6 +217,14 @@ const MainPage = () => {
       <h1>Main Page</h1>
       <SearchContainer>
         <SearchElem>
+          <span>Order: </span>
+          <Button
+            primary
+            formButton
+            onClick={handleChangeOrder}
+          >{order === 'asc' ? 'Descending' : 'Ascending'}</Button>
+        </SearchElem>
+        <SearchElem>
         <span>Sort by: </span>
           <SearchSelect onChange={handleChangeSort} value={sort}>
             <option value="createdAt">Added time</option>
@@ -223,13 +233,6 @@ const MainPage = () => {
             <option value="price">Price</option>
             <option value="rating">Rating</option>
           </SearchSelect>
-        </SearchElem>
-        <SearchElem>
-          <span>Order: </span>
-          <Button
-          primary
-            onClick={handleChangeOrder}
-          >{order === 'asc' ? 'Descending' : 'Ascending'}</Button>
         </SearchElem>
         <SearchElem>
           <span>Search: </span>
@@ -250,34 +253,39 @@ const MainPage = () => {
                 value="rating"
               >rating</option>
             </SearchSelect>
-            {search !== '' ? 
-            <Button
-              primary
-              onClick={handleResetForm}
-            >Reset form</Button> : ''}
             { search === 'price' ?
               <SearchForm>
-                <SearchInput 
-                  id="priceFrom"
-                  type="number"
-                  min="0"
-                  value={priceFrom}
-                  onChange={handleChangeSearchValue}
-                />
-                <span> - </span>
-                <SearchInput
-                  id="priceTo"
-                  type="number"
-                  min="0"
-                  value={priceTo}
-                  onChange={handleChangeSearchValue}
-                />
-              <Button
-                search
-                id="priceSearch"
-                type="submit"
-                onClick={handleSubmitSearch}
-              >Search</Button>
+                <FromToContainer>
+                  <SearchInput 
+                    id="priceFrom"
+                    type="number"
+                    min="0"
+                    value={priceFrom}
+                    onChange={handleChangeSearchValue}
+                  />
+                  <span> - </span>
+                  <SearchInput
+                    id="priceTo"
+                    type="number"
+                    min="0"
+                    value={priceTo}
+                    onChange={handleChangeSearchValue}
+                  />
+                </FromToContainer>
+                <SearchButtons>
+                  <Button
+                    id="priceSearch"
+                    type="submit"
+                    formButton
+                    onClick={handleSubmitSearch}
+                  >Search</Button>
+                  <Button
+                    primary
+                    resetForm
+                    formButton
+                    onClick={handleResetForm}
+                  >Reset form</Button>
+                </SearchButtons>
               </SearchForm> :
               search === 'genre' ?
               <SearchForm>
@@ -289,12 +297,20 @@ const MainPage = () => {
                   <option value="Horror">Horror</option>
                   <option value="Science">Science</option>
                 </SearchSelect>
-                <Button
-                search
-                id="genreSearch"
-                type="submit"
-                onClick={handleSubmitSearch}
-              >Search</Button>
+                <SearchButtons>
+                  <Button
+                    id="genreSearch"
+                    type="submit"
+                    formButton
+                    onClick={handleSubmitSearch}
+                  >Search</Button>
+                  <Button
+                    primary
+                    resetForm
+                    formButton
+                    onClick={handleResetForm}
+                  >Reset form</Button>
+                </SearchButtons>
               </SearchForm> :
               search === 'author' ?
               <SearchForm>
@@ -302,36 +318,54 @@ const MainPage = () => {
                   onChange={handleChangeSearchValue}
                   value={author}
                 />
-                <Button
-                search
-                id="authorSearch"
-                type="submit"
-                onClick={handleSubmitSearch}
-              >Search</Button>
+                <SearchButtons>
+                  <Button
+                    id="authorSearch"
+                    type="submit"
+                    formButton
+                    onClick={handleSubmitSearch}
+                  >Search</Button>
+                  <Button
+                    primary
+                    resetForm
+                    formButton
+                    onClick={handleResetForm}
+                  >Reset form</Button>
+                </SearchButtons>
               </SearchForm> :
               search === 'rating' ?
               <SearchForm>
-                <SearchInput 
-                  id="ratingFrom"
-                  type="number"
-                  min="0"
-                  value={ratingFrom}
-                  onChange={handleChangeSearchValue}
-                />
-                <span> - </span>
-                <SearchInput
-                  id="ratingTo"
-                  type="number"
-                  min="0"
-                  value={ratingTo}
-                  onChange={handleChangeSearchValue}
-                />
-              <Button
-                search
-                id="ratingSearch"
-                type="submit"
-                onClick={handleSubmitSearch}
-              >Search</Button>
+                <FromToContainer>
+                  <SearchInput 
+                    id="ratingFrom"
+                    type="number"
+                    min="0"
+                    value={ratingFrom}
+                    onChange={handleChangeSearchValue}
+                  />
+                  <span> - </span>
+                  <SearchInput
+                    id="ratingTo"
+                    type="number"
+                    min="0"
+                    value={ratingTo}
+                    onChange={handleChangeSearchValue}
+                  />
+                </FromToContainer>
+                <SearchButtons>
+                  <Button
+                    id="ratingSearch"
+                    type="submit"
+                    formButton
+                    onClick={handleSubmitSearch}
+                  >Search</Button>
+                  <Button
+                    primary
+                    resetForm
+                    formButton
+                    onClick={handleResetForm}
+                  >Reset form</Button>
+                </SearchButtons>
               </SearchForm> : ''
             }
           </SearchElem>

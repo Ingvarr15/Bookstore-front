@@ -21,7 +21,7 @@ export const Logo = styled.span<any>`
 `
 
 export const MainContainer = styled.div<any>`
-  margin-top: 80px;
+  margin-top: 70px;
 `
 
 export const Container = styled.div<any>`
@@ -101,7 +101,7 @@ export const NavUL = styled.ul<any>`
   position: relative;
   display: flex;
   justify-content: flex-end;
-  padding: 10px 5px;
+  padding: 0 5px;
   list-style: none;
   color: #ffffff
 `
@@ -117,14 +117,17 @@ export const NavLink = styled(Link)<any>`
   }
   transition: all 0.2s linear;
   ${props => props.reply && `
+  padding: 5px;
+  display: flex;
+  font-weight: 400;
     &:hover {
-      background: 0;
+      background: #742525;
     }
   `}
 `
 
 export const NavListItem = styled.li<any>`
-  padding: 0 0;
+  padding: 0;
 `
 
 export const Replies = styled.div<any>`
@@ -147,27 +150,26 @@ export const ReplyLogo = styled.span<any>`
 `
 
 export const ReplyUL = styled.ul<any>`
-  padding-left: 0;
   list-style: none;
   cursor: pointer;
 `
 
 export const ReplyItem = styled.li<any>`
-  min-width: 280px;
-  padding: 5px 8px;
+  min-width: 300px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  transition: all 0.2s linear;
 `
 export const ReplyInner = styled.span<any>`
-  padding: 23px 11px;
-  transition: all 0.2s linear;
+  font-weight: 400;
   &:hover {
-    background: #742525;
+    text-decoration: underline;
   }
 `
 
 export const Button = styled.button<any>`
-  
   font-size: 16px;
   background: transparent;
   font-family: 'Roboto', sans-serif;
@@ -180,6 +182,12 @@ export const Button = styled.button<any>`
     color: #ffffff;
     background: #cc4147;
   }
+  ${props => props.resetForm && `
+    margin-right: 3px;
+  `}
+  ${props => props.formButton && `
+    font-size: 14px;
+  `}
   ${props => props.primary && `
     background: #cc4147;
     color: #ffffff;
@@ -196,83 +204,109 @@ export const Button = styled.button<any>`
   `}
   ${props => props.sign && `
     margin-top: 30px;
+    padding: 5px;
   `}
   ${props => props.deleteComment && `
-    padding: 5px 5px;
+    padding: 5px;
     font-size: 12px;
     border-width: 1px;
   `}
 `
 
 export const BooksContainer = styled.div<any>`
+    position: relative;
     max-width: 1600px;
     margin: 0 auto;
 `
 
 export const SearchContainer = styled.div<any>`
-  padding: 0 20px;
+  padding: 0 10px;
   display: flex;
-  position: relative;
-  &:after {
-    content: "";
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 98vw;
-    height: 1px;
-    background: #cc4147;
-    opacity: 0.4;
-  }
+  flex-direction: column;
+  position: absolute;
+  top: 58px;
+  left: 0;
+  z-index: 1000;
+  border: 1px solid #cc4147;
 `
+// &:after {
+//   content: "";
+//   position: absolute;
+//   bottom: -10px;
+//   left: 50%;
+//   transform: translateX(-50%);
+//   width: 98vw;
+//   height: 1px;
+//   background: #cc4147;
+//   opacity: 0.4;
+// }
 
 export const SearchElem = styled.div<any>`
   min-width: 150px;
-  padding: 0 30px;
-  border-right: 1px solid #cc4147;
-  &:first-child {
-    padding-left: 0;
-  }
+  padding-top: 10px;
+  padding-bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
   &:last-child {
-    padding-right: 0;
-    border: 0;
+    padding-bottom: 10px;
   }
 `
 
+export const SearchButtons = styled.div<any>`
+  display: flex;
+  flex-direction: row-reverse;
+`
+// border-right: 1px solid #cc4147;
+// &:first-child {
+//   padding-left: 0;
+// }
+// &:last-child {
+//   padding-right: 0;
+//   border: 0;
+// }
+
 export const SearchSelect = styled.select<any>`
-  padding: 5px 5px;
-  margin-right: 5px;
+  padding: 3px 3px;
   overflow: hidden;
   cursor: pointer;
   width: 120px;
   font-family: 'Roboto', sans-serif;
+  font-size: 12px;
   outline: none;
 	border: 2px solid #cc4147;
   border-radius: 3px;
   text-transform: uppercase;
   background: #ffffff;
   ${props => props.genre && `
-    margin-left: 60px
+    margin-bottom: 10px
   `}
 `
 
 export const SearchForm = styled.form<any>`
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+`
+
+export const FromToContainer = styled.div<any>`
+    margin-bottom: 10px;
 `
 
 export const SearchInput = styled.input<any>`
   width: 40px;
-  font-size: 16px;
+  font-size: 15px;
   padding: 5px 5px;
   border: 2px solid #cc4147;
   border-radius: 3px;
   ${props => props.author && `
-    width: 194px;
+    width: 136px;
+    margin-bottom: 5px;
   `}
 `
 
 export const BookUL = styled.ul<any>`
-  margin-top: 40px;
   list-style: none;
   display: flex;
   flex-wrap: wrap;
@@ -282,6 +316,7 @@ export const BookUL = styled.ul<any>`
 
 export const BookLink = styled(Link)<any>`
   display: flex;
+  flex-direction: column;
   padding-right: 15px;
   justify-content: space-between;
   align-items: center;
@@ -291,9 +326,8 @@ export const BookLink = styled(Link)<any>`
 
 export const BookLI = styled.li<any>`
   margin-right: 20px;
-  margin-top: 20px;
-  flex-basis: 30%;
-  width: 30%;
+  flex-basis: 20%;
+  width: 20%;
   border: 1px solid rgba(204, 65, 71, 0.4);;
   border-radius: 3px;
   transition: box-shadow 0.15s linear;
@@ -357,11 +391,12 @@ export const PagesLI = styled.li<any>`
 export const Preview = styled.img<any>`
   max-width: 50px;
   cursor: pointer;
+  border: 2px solid transparent;
   &:first-child {
     margin-right: 5px;
   }
   ${props => props.active && `
-    border: 2px solid #cc4147;
+    border-color: #cc4147;
     border-radius: 3px;
   `}
 `
@@ -384,8 +419,8 @@ export const BookImages = styled.div<any>`
 `
 
 export const BookCardImage = styled.img<any>`
-  max-width: 40%;
-  height: 40%;
+  max-width: 75%;
+  height: 75%;
 `
 
 export const BookInfo = styled.div<any>`
