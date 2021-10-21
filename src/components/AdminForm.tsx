@@ -16,7 +16,6 @@ const AdminForm = () => {
   const [genre, setGenre] = useState('')
   const [author, setAuthor] = useState('')
   const [price, setPrice] = useState(0)
-  const [rating, setRating] = useState(0)
 
   const fileRef = useRef<any>(null)
   const fileRef2 = useRef<any>(null)
@@ -27,7 +26,7 @@ const AdminForm = () => {
 
     const fetchData = async (uint8Array: any, uint8Array2: any) => {
       try {
-        const res = await postBookReq(uint8Array, uint8Array2, name, description, genre, author, rating, price)
+        const res = await postBookReq(uint8Array, uint8Array2, name, description, genre, author, price)
         console.log(name, description, genre, author)
         setLoading(false)
       } catch (error) {
@@ -71,9 +70,6 @@ const AdminForm = () => {
     if (e.currentTarget.name === 'author') {
       setAuthor(e.currentTarget.value)
     }
-    if (e.currentTarget.name === 'rating') {
-      setRating(e.currentTarget.value)
-    }
     if (e.currentTarget.name === 'price') {
       setPrice(e.currentTarget.value)
     }
@@ -113,15 +109,6 @@ const AdminForm = () => {
         name="author" 
         onChange={handleChange} 
         value={author}
-        required
-      />
-      <AdminInput 
-        type="number"
-        name="rating"
-        min="0.1"
-        step="0.01"
-        onChange={handleChange} 
-        value={rating}
         required
       />
       <BookProp>Price:</BookProp>

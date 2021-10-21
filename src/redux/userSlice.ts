@@ -19,6 +19,7 @@ export interface UserType {
   role: string,
   replies: any,
   reliesCount: any,
+  ratings: any,
   isTokenChecking: boolean,
   isExists: boolean,
   isRepliesLoading: boolean
@@ -37,6 +38,7 @@ const initialState: UserType = {
   role: '',
   replies: [],
   reliesCount: '',
+  ratings: [],
   isTokenChecking: false,
   isExists: true,
   isRepliesLoading: false
@@ -133,6 +135,7 @@ export const userSlice = createSlice({
       state.role = action.payload.role === 1 ? 'User' : 'Admin'
       state.id = action.payload.id
       state.isUserInfoLoading = false
+      state.ratings = action.payload.ratings
     })
     builder.addCase(fetchUser.pending, (state, action) => {
       state.username = '...'

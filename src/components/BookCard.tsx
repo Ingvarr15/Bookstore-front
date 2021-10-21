@@ -4,7 +4,8 @@ import { deleteBookReq } from "../api/deleteBookReq"
 import { deleteCommentReq } from "../api/deleteCommentReq"
 import { getOneBookReq } from "../api/getOneBookReq"
 import { postCommentReq } from "../api/postCommentReq"
-import { setChapter } from "../redux/booksSlice"
+import { setRatingReq } from "../api/setRatingReq"
+import { fetchBooks, setChapter } from "../redux/booksSlice"
 import { fetchComments, setBookId, setText, postComment, setReplyTo } from "../redux/commentSlice"
 import { useAppSelector, useAppDispatch } from "../redux/hooks"
 import { fetchUser } from "../redux/userSlice"
@@ -28,7 +29,13 @@ import {
   CommentText,
   CommentsForm,
   ReplyAlert,
-  ReplyAlertInner
+  ReplyAlertInner,
+  RatingBody,
+  RatingActive,
+  RatingItems,
+  RatingItem,
+  RatingContainer,
+  RatingOfUser
 } from "../style"
 
 
@@ -43,6 +50,7 @@ const BookCard = ({item}: any) => {
   const idState = useAppSelector(state => state.user.id)
   const isAuthorized = useAppSelector(state => state.user.isAuthorized)
   const isTokenChecking = useAppSelector(state => state.user.isTokenChecking)
+  const userRatingsState = useAppSelector(state => state.user.ratings)
   const location = useLocation()
   const history = useHistory()
   const [comment, setComment] = useState('')
@@ -50,12 +58,32 @@ const BookCard = ({item}: any) => {
   const [replyTarget, setReplyTarget] = useState('')
   const [targetId, setTargetId] = useState('')
   const [photo, setPhoto] = useState(1)
+  const [rating, setRating] = useState(0)
+  const [radio, setRadio] = useState(0)
+  const [goldStars, setGoldStars] = useState(0)
+  const [userRating, setUserRating] = useState(0);
 
   useEffect(() => {
     if (item === undefined) {
       item = getItem()
     }
   }, [])
+
+  useEffect(() => {
+    setGoldStars(item.rating / 0.05)
+    setUserRating(calculateUserRating())
+  }, [booksList, userRatingsState])
+
+  const calculateUserRating = () => {
+    const userRating = userRatingsState.find((rating: any) => rating.book === item.id)
+    if (userRating !== undefined) {
+      return userRating.rating / 0.05
+    } else {
+      return 0
+    }
+  }
+
+  // `${item.rating / 0.05}%`
 
   const getItem = async () => {
     const res = await getOneBookReq(location.pathname.split('/book/')[1])
@@ -64,7 +92,6 @@ const BookCard = ({item}: any) => {
 
   useEffect(() => {
     dispatch(setBookId(item.id))
-    
   }, [])
 
   useEffect(() => {
@@ -142,9 +169,24 @@ const BookCard = ({item}: any) => {
   const handleDeleteComment = async (id: number) => {
     const res: any = await deleteCommentReq(id)
     if (res.status === 201) {
-      console.log(res)
       dispatch(fetchComments())
     }
+  }
+
+  const handleChangeRadio = async (e: any) => {
+    const res: any = await setRatingReq(item.id, e.target.id)
+    if (res && res.status === 200) {
+      dispatch(fetchBooks())
+      dispatch(fetchUser())
+    }
+  }
+
+  const handleEnterMouse = (e: any) => {
+    setUserRating(e.currentTarget.dataset.percent)
+  }
+
+  const handleLeaveMouse = () => {
+    setUserRating(calculateUserRating())
   }
  
   return (
@@ -185,7 +227,27 @@ const BookCard = ({item}: any) => {
               <BookPropName>Description: </BookPropName> {item.description}
             </BookInner>
             <BookInner>
-              <BookPropName>Rating: </BookPropName> {item.rating}
+              <BookPropName>Rating: </BookPropName> {item.rating === null ? '-' : item.rating.toString().substring(0, 3)}
+              <RatingContainer>
+                <RatingBody
+                  onMouseLeave={handleLeaveMouse}
+                >
+                  <RatingActive 
+                    style={{width: `${goldStars}%`}} 
+                    id="rating-active"
+                  ></RatingActive>
+                  <RatingOfUser
+                    style={{width: `${userRating}%`}}            
+                  ></RatingOfUser>
+                  <RatingItems>
+                    <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="1" data-percent="20"/>
+                    <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="2" data-percent="40"/>
+                    <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="3" data-percent="60"/>
+                    <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="4" data-percent="80"/>
+                    <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="5" data-percent="100"/>
+                  </RatingItems>
+                </RatingBody>
+              </RatingContainer>
             </BookInner>
         </BookInfo>
       </BookContainer>

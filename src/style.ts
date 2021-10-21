@@ -1,6 +1,6 @@
 import styled, { createGlobalStyle } from 'styled-components'
 import { Link } from 'react-router-dom'
-import AfterImg from './ornament.png'
+import afterImg from './ornament.png'
 
 export const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
@@ -37,7 +37,7 @@ export const CurrentHeading = styled.h1<any>`
     top: 48%;
     left: 50%;
     transform: translateX(-50%) translateY(-48%);
-    background: url(${AfterImg}) no-repeat;
+    background: url(${afterImg}) no-repeat;
     background-size: 100%;
   }
 `
@@ -197,6 +197,74 @@ export const Replies = styled.div<any>`
   right: 145px;
   background: linear-gradient(0deg, rgba(139,45,45,1) 0%, rgba(204,65,71,1) 100%);
   border-radius: 3px;
+`
+
+export const RatingBody = styled.div<any>`
+	position: relative;
+	&:before {
+		content: "★★★★★";
+		display: block;
+	}
+`
+
+export const RatingContainer = styled.div<any>`
+	margin-top: 10px;
+	display: flex;
+	align-items: flex-end;
+	font-size: 40px;
+	color: 2e2e2e;
+	line-height: 0.75;
+`
+
+export const RatingActive = styled.div<any>`
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	overflow: hidden;
+	&:before {
+		content: "★★★★★";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		color: #ffd300;
+	}
+`
+
+export const RatingOfUser = styled.div<any>`
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	overflow: hidden;
+	opacity: 0.5;
+	&:before {
+		content: "★★★★★";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		color: red;
+	}
+`
+
+export const RatingItems = styled.div<any>`
+	display: flex;
+	position: absolute;
+	width: 75%;
+	height: 80%;
+	top: 0;
+	left: 0;
+`
+
+export const RatingItem = styled.input<any>`
+	flex: 0 0 20%;
+	height: 100%;
+	opacity: 0;
+	cursor: pointer;
 `
 
 export const ReplyLogo = styled.span<any>`
@@ -365,10 +433,12 @@ export const SearchInput = styled.input<any>`
 `
 
 export const BookUL = styled.ul<any>`
+  margin: 0 auto;
+  max-width: 65%;
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
 `
 
@@ -384,8 +454,8 @@ export const BookLink = styled(Link)<any>`
 
 export const BookLI = styled.li<any>`
   margin-right: 20px;
-  flex-basis: 20%;
-  width: 20%;
+  margin-bottom: 20px;
+  width: 30%;
   border: 1px solid rgba(204, 65, 71, 0.4);;
   border-radius: 3px;
   transition: box-shadow 0.15s linear;

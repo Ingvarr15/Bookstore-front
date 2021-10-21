@@ -394,7 +394,7 @@ const MainPage = () => {
                         <BookPropName>Description: </BookPropName> {item.description}
                       </BookInner>
                       <BookInner>
-                        <BookPropName>Rating: </BookPropName> {item.rating}
+                        <BookPropName>Rating: </BookPropName> {item.rating === null ? '-' : item.rating.toString().substring(0, 3)}
                       </BookInner>
                     </UpperSection>
                     <LowerSection>
