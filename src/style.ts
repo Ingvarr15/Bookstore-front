@@ -254,6 +254,13 @@ export const CurrentTab = styled.div<any>`
   padding-left: 10px;
   border: 2px solid #cc4147;
   border-radius: 3px;
+	${props => props.description && `
+		max-width: 280px;
+		max-height: 291px;
+		word-break: break-word;
+		overflow: scroll;
+		overflow-x: hidden;
+  `}
 `
 
 export const RatingActive = styled.div<any>`
@@ -458,7 +465,6 @@ export const SearchSelect = styled.select<any>`
 `
 
 export const SearchForm = styled.form<any>`
-	max-width: 172px;
   margin-top: 10px;
   display: flex;
   flex-direction: column;
@@ -605,7 +611,6 @@ export const BookCardImage = styled.img<any>`
 
 export const BookInfo = styled.div<any>`
   min-width: 300px;
-  word-break: break-all;
 `
 
 export const BookContainer = styled.div<any>`

@@ -261,7 +261,7 @@ const BookCard = ({item}: any) => {
                   </RatingContainer>
                 </BookInner>
               </CurrentTab> :
-               <CurrentTab>
+               <CurrentTab description>
                 <BookInner>
                   <BookPropName>Genre: </BookPropName> {item.genre}
                 </BookInner>

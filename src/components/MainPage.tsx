@@ -447,9 +447,6 @@ const MainPage = () => {
                         <BookPropName>Author: </BookPropName> {item.author}
                       </BookInner>
                       <BookInner>
-                        <BookPropName>Description: </BookPropName> {item.description}
-                      </BookInner>
-                      <BookInner>
                         <BookPropName>Rating:
                           <RatingBody mainPage>
                             <RatingActive

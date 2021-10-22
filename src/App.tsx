@@ -84,8 +84,10 @@ function App() {
     ) {
       const queryValue = query.get('value')
       const genreValue = (queryValue !== null) ? queryValue.split(",") : ''
+      const queryPage = query.get('page')
+      const pageValue = (queryPage !== null) ? +queryPage : 1
 
-      dispatch(setPage(query.get('page')))
+      dispatch(setPage(pageValue))
       dispatch(changeOrder(query.get('order')))
       dispatch(changeSort(query.get('sortBy')))
       dispatch(setBookSearch({
