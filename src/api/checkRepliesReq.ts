@@ -12,6 +12,5 @@ export const checkRepliesReq = async (userId: any) => {
     return res
   }
   catch (error: any) {
-    console.log(error.response.data.message)
   }
 }

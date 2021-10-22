@@ -55,7 +55,6 @@ const SignUp = () => {
     } else {
       setError(res)
     }
-    console.log(res)
   }
 
   return (

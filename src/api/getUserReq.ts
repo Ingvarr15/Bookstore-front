@@ -6,7 +6,6 @@ export const getUserReq = async () => {
       method: 'get',
       url: '/user'
     })
-    console.log(res)
     return res
 
     // const res: any = await axios.get(`${baseUrl}/user`)
@@ -14,6 +13,5 @@ export const getUserReq = async () => {
     // return res
   }
   catch (error: any) {
-    console.log(error.response.data.message)
   }
 }

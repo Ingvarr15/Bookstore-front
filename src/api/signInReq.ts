@@ -10,11 +10,9 @@ export const signInReq = async (email: string, password: string) => {
         password: password,
       }
     })
-    console.log(res)
     return res
   }
   catch (error: any) {
-    console.log(error.response.data.message)
     return error.response.data.message
   }
 }

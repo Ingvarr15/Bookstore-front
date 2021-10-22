@@ -15,7 +15,6 @@ export const postBookReq = async (uint8Array: any, uint8Array2: any, name: strin
             price: price
           },
     })
-    console.log([...uint8Array])
     return res
 
     // const res: any = await axios.post(`${baseUrl}/api/auth/signin`, {
@@ -25,6 +24,5 @@ export const postBookReq = async (uint8Array: any, uint8Array2: any, name: strin
     // return res
   }
   catch (error: any) {
-    console.log(error.response.data.message)
   }
 }

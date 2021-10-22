@@ -1,7 +1,6 @@
 import { appAxios } from "./axios.config"
 
 export const editUserReq = async (targetField: any, value: any) => {
-  console.log(targetField, value)
   switch(targetField) {
     case `avatar`:
       try {
@@ -12,7 +11,6 @@ export const editUserReq = async (targetField: any, value: any) => {
             avatar: [...value]
           }
         })
-        console.log(res)
         return res
       }
       catch (error: any) {

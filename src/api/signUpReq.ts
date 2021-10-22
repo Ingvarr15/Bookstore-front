@@ -19,7 +19,6 @@ export const signUpReq = async (username: string, email: string, password: strin
     }
   }
   catch (error: any) {
-    console.log(error.response.data.message)
     return error.response.data.message
   }
 }

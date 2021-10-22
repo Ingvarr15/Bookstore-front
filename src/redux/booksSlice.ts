@@ -42,7 +42,6 @@ export const fetchBooks = createAsyncThunk(
   async (_, api) => {
     let state: any = api.getState()
     const res = await getBooksReq(state.books.sortBy, state.books.order, state.books.filterBy, state.books.from, state.books.to, state.books.filterValue, state.books.page)
-    console.log(res)
     return res.data
   }
 )
@@ -52,7 +51,6 @@ export const fetchOneBook = createAsyncThunk(
   async (_, api) => {
     let state: any = api.getState()
     const res = await getOneBookReq(state.comments.bookId)
-    console.log(res)
     return res
   }
 )
@@ -126,7 +124,6 @@ export const bookSlice = createSlice({
         tempObj.img = URL.createObjectURL(blob)
         tempObj.img2 = tempObj.img2 === null ? null : URL.createObjectURL(blob2)
         state.oneBook = tempObj
-        console.log(tempObj)
         state.isBookFound = true
       } else {
         state.isBookFound = false

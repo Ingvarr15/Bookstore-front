@@ -25,7 +25,6 @@ export const fetchComments = createAsyncThunk(
 	'comments/fetchStatus',
 	async (_, api) => {
 		let state: any = await api.getState()
-		console.log('----', state.comments.bookId)
 		const res = await getCommentsReq(state.comments.bookId)
 		return res.data
 	}

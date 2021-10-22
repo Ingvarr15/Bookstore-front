@@ -6,7 +6,6 @@ export const getBooksAttributesReq = async () => {
       method: 'get',
       url: '/get-books-attrs',
     })
-    console.log(res)
     return res
 
     // const res: any = await axios.get(`${baseUrl}/user`)
@@ -14,6 +13,5 @@ export const getBooksAttributesReq = async () => {
     // return res
   }
   catch (error: any) {
-    console.log(error.response.data.message)
   }
 }

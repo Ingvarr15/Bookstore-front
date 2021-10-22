@@ -1,7 +1,6 @@
 import { appAxios } from "./axios.config"
 
 export const getCommentsReq = async (bookId: any) => {
-  console.log('-----', bookId)
   try {
     const res: any = await appAxios({
       method: 'get',
@@ -13,6 +12,5 @@ export const getCommentsReq = async (bookId: any) => {
     return res
   }
   catch (error: any) {
-    console.log(error.response.data.message)
   }
 }

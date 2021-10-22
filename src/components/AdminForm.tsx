@@ -27,10 +27,8 @@ const AdminForm = () => {
     const fetchData = async (uint8Array: any, uint8Array2: any) => {
       try {
         const res = await postBookReq(uint8Array, uint8Array2, name, description, genre, author, price)
-        console.log(name, description, genre, author)
         setLoading(false)
       } catch (error) {
-        console.error(error)
       }
     }
 

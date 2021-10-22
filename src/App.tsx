@@ -103,7 +103,6 @@ function App() {
   useEffect(() => {
     dispatch(fetchUser())
     dispatch(setChapter(location.pathname))
-    console.log(location.pathname.split('/')[1])
   }, [])
 
   useEffect(() => {
@@ -128,10 +127,6 @@ function App() {
   useEffect(() => {
     socket.on('newConnection', () => {
       dispatch(setSocket(socket.id))
-      console.log(socket.id)
-    })
-    socket.on('newReply', (asd) => {
-      console.log(asd)
     })
   }, [socket])
 
@@ -157,7 +152,6 @@ function App() {
 
   useEffect(() => {
     checkTokenFunc()
-    console.log(isAuthorized)
   }, [])
 
   async function checkTokenFunc() {

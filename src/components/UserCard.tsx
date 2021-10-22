@@ -91,7 +91,6 @@ const UserCard = () => {
 
   const handleSubmit = async (e:any) => {
     e.preventDefault()
-    console.log(e)
     let res
       if (e.target.id === 'avatar-button') {
         const fetchData = async (uint8Array: any) => {
@@ -99,7 +98,6 @@ const UserCard = () => {
             const response = await editUserReq('avatar', uint8Array)
             return response
           } catch (error) {
-            console.error(error)
           }
         }
         if (!fileRef.current || !fileRef.current[0].type.includes('image')) {
@@ -107,7 +105,6 @@ const UserCard = () => {
           return void null
         }
 
-        console.log(fileRef.current[0].type)
     
         const reader = new FileReader()
         reader.onloadend = async () => {

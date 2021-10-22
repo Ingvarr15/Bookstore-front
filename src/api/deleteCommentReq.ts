@@ -9,10 +9,8 @@ export const deleteCommentReq = async (id:any) => {
         id: id
       }
     })
-    console.log(res)
     return res
   }
   catch (error: any) {
-    console.log(error.response.data.message)
   }
 }

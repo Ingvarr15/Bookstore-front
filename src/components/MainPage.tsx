@@ -219,16 +219,13 @@ const MainPage = () => {
 
     if (!e.target.hasAttribute('checked')) {
       rawGenreArray.push(value)
-      console.log('not found')
     } else {
-      console.log('found')
       rawGenreArray.splice((rawGenreArray.findIndex(item => item === value)), 1)
     }
     setGenreArray([...rawGenreArray])
   }
 
   useEffect(() => {
-    console.log(genreArray)
   }, [genreArray])
   
   return (
