@@ -13,7 +13,7 @@ export interface Books {
   filterBy: string,
   from: number | string,
   to: number | string,
-  filterValue: string,
+  filterValue: any,
   page: number,
   currChapter: string,
   oneBook: any,

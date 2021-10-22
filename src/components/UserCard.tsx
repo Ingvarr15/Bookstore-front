@@ -193,6 +193,7 @@ const UserCard = () => {
           <Avatar src={avatar === null ? './avatar.png' : avatar} alt="" />
           <Button
             avatar
+            primary
             name="avatar"
             onClick={handleChangeUserData}
           >Change avatar</Button>
@@ -243,6 +244,7 @@ const UserCard = () => {
             <Button
               onClick={handleSignOut}
               user
+              primary
             >Sign out</Button>
           </UserParagraph>
         </UserInfoContainer>

@@ -141,12 +141,20 @@ export const ChangeButtons = styled.div<any>`
   padding: 5px;
 `
 
+export const GenresContainer = styled.div<any>`
+  display: flex;
+  flex-wrap: wrap;
+	max-width: 150px;
+	font-size: 13px;
+	margin-bottom: 10px;
+`
+
 export const NavBar = styled.nav<any>`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 2000;
   background: linear-gradient(0deg, rgba(139,45,45,1) 0%, rgba(204,65,71,1) 100%);
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
   user-select: none;
@@ -198,6 +206,14 @@ export const Replies = styled.div<any>`
   background: linear-gradient(0deg, rgba(139,45,45,1) 0%, rgba(204,65,71,1) 100%);
   border-radius: 3px;
 `
+export const RatingContainer = styled.div<any>`
+	margin-top: 10px;
+	display: flex;
+	align-items: flex-end;
+	font-size: 40px;
+	color: #3b3b3b;
+	line-height: 0.75;
+`
 
 export const RatingBody = styled.div<any>`
 	position: relative;
@@ -205,15 +221,39 @@ export const RatingBody = styled.div<any>`
 		content: "★★★★★";
 		display: block;
 	}
+  ${props => props.mainPage && `
+    width: 34%;
+    margin-left: 5px;
+    display: inline-block;
+  `}
 `
 
-export const RatingContainer = styled.div<any>`
-	margin-top: 10px;
-	display: flex;
-	align-items: flex-end;
-	font-size: 40px;
-	color: 2e2e2e;
-	line-height: 0.75;
+export const BookTabs = styled.div<any>`
+  z-index: 5;
+  margin-left: 20px;
+  margin-bottom: -2px;
+  user-select: none;
+`
+
+export const Tab = styled.div<any>`
+  display: inline-block;
+  padding: 5px;
+  cursor: pointer;
+  border: 2px solid #cc4147;
+  border-radius: 3px 3px 0 0;
+  &:last-child {
+    margin-left: 15px;
+  }
+  ${props => props.current && `
+    border-bottom: 2px solid #ffffff;
+  `}
+`
+
+export const CurrentTab = styled.div<any>`
+  padding: 5px;
+  padding-left: 10px;
+  border: 2px solid #cc4147;
+  border-radius: 3px;
 `
 
 export const RatingActive = styled.div<any>`
@@ -231,6 +271,10 @@ export const RatingActive = styled.div<any>`
 		height: 100%;
 		color: #ffd300;
 	}
+
+  ${props => props.mainPage && `
+    display: inline-block;
+  `}
 `
 
 export const RatingOfUser = styled.div<any>`
@@ -276,6 +320,9 @@ export const ReplyLogo = styled.span<any>`
   &:hover {
     background: #742525;
   }
+  ${props => props.shown && `
+    background: #742525;
+  `}
 `
 
 export const ReplyUL = styled.ul<any>`
@@ -346,6 +393,7 @@ export const Button = styled.button<any>`
 `
 
 export const SearchContainer = styled.div<any>`
+  max-width: 172px;
   padding: 0 10px;
   display: flex;
   flex-direction: column;
@@ -410,6 +458,7 @@ export const SearchSelect = styled.select<any>`
 `
 
 export const SearchForm = styled.form<any>`
+	max-width: 172px;
   margin-top: 10px;
   display: flex;
   flex-direction: column;
@@ -468,6 +517,9 @@ export const BookLI = styled.li<any>`
 `
 
 export const BookInner = styled.div<any>`
+  &:not(:last-child) {
+    margin-bottom: 5px;
+  }
   ${props => props.price && `
     font-size: 32px;
   `}
@@ -552,7 +604,8 @@ export const BookCardImage = styled.img<any>`
 `
 
 export const BookInfo = styled.div<any>`
-  min-width: 400px;
+  min-width: 300px;
+  word-break: break-all;
 `
 
 export const BookContainer = styled.div<any>`

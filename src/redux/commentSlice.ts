@@ -72,6 +72,7 @@ export const commentSlice = createSlice({
     })
 		builder.addCase(postComment.fulfilled, (state, action) => {
 			state.lastSendingRes = action.payload
+			state.text = ''
     })
   }
 })

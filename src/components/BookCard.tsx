@@ -35,7 +35,10 @@ import {
   RatingItems,
   RatingItem,
   RatingContainer,
-  RatingOfUser
+  RatingOfUser,
+  BookTabs,
+  Tab,
+  CurrentTab
 } from "../style"
 
 
@@ -61,7 +64,8 @@ const BookCard = ({item}: any) => {
   const [rating, setRating] = useState(0)
   const [radio, setRadio] = useState(0)
   const [goldStars, setGoldStars] = useState(0)
-  const [userRating, setUserRating] = useState(0);
+  const [userRating, setUserRating] = useState(0)
+  const [isMainTab, setIsMainTab] = useState(true);
 
   useEffect(() => {
     if (item === undefined) {
@@ -83,8 +87,6 @@ const BookCard = ({item}: any) => {
     }
   }
 
-  // `${item.rating / 0.05}%`
-
   const getItem = async () => {
     const res = await getOneBookReq(location.pathname.split('/book/')[1])
     return res
@@ -97,6 +99,8 @@ const BookCard = ({item}: any) => {
   useEffect(() => {
     if (commentTextState !== '') {
       dispatch(postComment())
+    } else if (commentTextState === '') {
+      handleReplyOff()
     }
   }, [commentTextState])
 
@@ -134,9 +138,6 @@ const BookCard = ({item}: any) => {
     dispatch(setText(comment))
     socket.emit('comment', comment)
     setComment('')
-    if (reply) {
-
-    }
   }
 
   const handleReplyOn = (ownerId: any, owner: any) => {
@@ -188,6 +189,10 @@ const BookCard = ({item}: any) => {
   const handleLeaveMouse = () => {
     setUserRating(calculateUserRating())
   }
+
+  const handleChangeTab = (bool: boolean) => {
+    setIsMainTab(bool)
+  }
  
   return (
     <div>
@@ -217,38 +222,57 @@ const BookCard = ({item}: any) => {
         </BookImages>
         <BookInfo>
           <h2>{item.name}</h2>
-            <BookInner>
-              <BookPropName>Genre: </BookPropName> {item.genre}
-            </BookInner>
-            <BookInner>
-              <BookPropName>Author: </BookPropName> {item.author}
-            </BookInner>
-            <BookInner>
-              <BookPropName>Description: </BookPropName> {item.description}
-            </BookInner>
-            <BookInner>
-              <BookPropName>Rating: </BookPropName> {item.rating === null ? '-' : item.rating.toString().substring(0, 3)}
-              <RatingContainer>
-                <RatingBody
-                  onMouseLeave={handleLeaveMouse}
-                >
-                  <RatingActive 
-                    style={{width: `${goldStars}%`}} 
-                    id="rating-active"
-                  ></RatingActive>
-                  <RatingOfUser
-                    style={{width: `${userRating}%`}}            
-                  ></RatingOfUser>
-                  <RatingItems>
-                    <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="1" data-percent="20"/>
-                    <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="2" data-percent="40"/>
-                    <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="3" data-percent="60"/>
-                    <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="4" data-percent="80"/>
-                    <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="5" data-percent="100"/>
-                  </RatingItems>
-                </RatingBody>
-              </RatingContainer>
-            </BookInner>
+            <BookTabs>
+              <Tab 
+                current={isMainTab ? true : false}
+                onClick={() => handleChangeTab(true)}
+              >Main</Tab>
+              <Tab 
+                current={!isMainTab ? true : false}
+                onClick={() => handleChangeTab(false)}
+              >About book</Tab>
+            </BookTabs>
+            { isMainTab ? 
+              <CurrentTab>
+                <BookInner>
+                  <BookPropName>Price: </BookPropName>€{item.price}
+                </BookInner>
+                <BookInner>
+                  <BookPropName>Rating: </BookPropName> {item.rating === null ? '-' : item.rating.toString().substring(0, 3)}
+                  <RatingContainer>
+                    <RatingBody
+                      onMouseLeave={handleLeaveMouse}
+                    >
+                      <RatingActive 
+                        style={{width: `${goldStars}%`}} 
+                        id="rating-active"
+                      ></RatingActive>
+                      <RatingOfUser
+                        style={{width: `${userRating}%`}}            
+                      ></RatingOfUser>
+                      <RatingItems>
+                        <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="1" data-percent="20"/>
+                        <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="2" data-percent="40"/>
+                        <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="3" data-percent="60"/>
+                        <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="4" data-percent="80"/>
+                        <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="5" data-percent="100"/>
+                      </RatingItems>
+                    </RatingBody>
+                  </RatingContainer>
+                </BookInner>
+              </CurrentTab> :
+               <CurrentTab>
+                <BookInner>
+                  <BookPropName>Genre: </BookPropName> {item.genre}
+                </BookInner>
+                <BookInner>
+                  <BookPropName>Author: </BookPropName> {item.author}
+                </BookInner>
+                <BookInner>
+                  <BookPropName>Description: </BookPropName> {item.description}
+                </BookInner>
+              </CurrentTab>
+            }
         </BookInfo>
       </BookContainer>
       <CommentsContainer>

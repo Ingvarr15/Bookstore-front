@@ -82,12 +82,16 @@ function App() {
         query.get('order') &&
         query.get('sortBy')
     ) {
+      const queryValue = query.get('value')
+      const genreValue = (queryValue !== null) ? queryValue.split(",") : ''
+
       dispatch(setPage(query.get('page')))
       dispatch(changeOrder(query.get('order')))
       dispatch(changeSort(query.get('sortBy')))
       dispatch(setBookSearch({
         filterBy: query.get('filterBy') ? query.get('filterBy') : '',
-        filterValue: query.get('value') ? query.get('value') : '',
+        filterValue: query.get('value') ? 
+          query.get('filterBy') === 'genre' ? genreValue : query.get('value') : '',
         from: query.get('from') ? query.get('from') : '',
         to: query.get('to') ? query.get('to') : ''
       }))
@@ -186,9 +190,9 @@ function App() {
             <Logo>Book Store</Logo>
           </NavLink>
           <NavUL>
-          {!isRepliesLoading && !isUserInfoLoading && isAuthorized ? 
+          {isAuthorized ? 
             <NavListItem onClick={handleRepliesToggle}>
-              <ReplyLogo><i className="fas fa-bell"></i> {repliesCountState}</ReplyLogo>
+              <ReplyLogo shown={isRepliesShown ? true : false}><i className="fas fa-bell"></i> {repliesCountState}</ReplyLogo>
               {isRepliesShown ? 
                 <Replies>
                   <ReplyUL>

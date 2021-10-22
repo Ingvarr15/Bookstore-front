@@ -33,7 +33,10 @@ import {
   SearchButtons,
   CurrentHeading,
   HeadingContainer,
-  Container
+  Container,
+  RatingActive,
+  RatingBody,
+  GenresContainer
 } from '../style'
 
 const MainPage = () => {
@@ -56,8 +59,8 @@ const MainPage = () => {
   const [priceTo, setPriceTo] = useState(filterByState === 'price' ? toState : '')
   const [ratingFrom, setRatingFrom] = useState(filterByState === 'rating' ? fromState : '')
   const [ratingTo, setRatingTo] = useState(filterByState === 'rating' ? toState : '')
-  const [genre, setGenre] = useState('')
   const [author, setAuthor] = useState('')
+  const [genreArray, setGenreArray]: any[] = useState([]);
 
   useEffect(() => {
     dispatch(setChapter(location.pathname))
@@ -73,7 +76,7 @@ const MainPage = () => {
     setRatingFrom(filterByState === 'rating' ? fromState : '')
     setRatingTo(filterByState === 'rating' ? toState : '')
     setAuthor(filterByState === 'author' ? filterValueState : '')
-    setGenre(filterByState === 'genre' ? filterValueState : '')
+    setGenreArray(filterByState === 'genre' ? filterValueState : [])
   }, [filterByState, fromState, toState, filterValueState, sortState, orderState])
 
   useEffect(() => {
@@ -113,7 +116,6 @@ const MainPage = () => {
     setPriceTo('')
     setRatingFrom('')
     setRatingTo('')
-    setGenre('')
     setAuthor('')
     setSearch(e.currentTarget.value)
     if (!e.currentTarget.value) {
@@ -140,9 +142,6 @@ const MainPage = () => {
       case 'ratingTo':
         setRatingTo(e.currentTarget.value)
         break
-      case 'genreSelect':
-        setGenre(e.currentTarget.value)
-        break
       case 'authorSelect':
         setAuthor(e.target.value)
         break
@@ -162,19 +161,19 @@ const MainPage = () => {
             to: priceTo
           }))
         } else {
-          return
+          handleResetForm()
         }
         break
       case 'genreSearch':
-        if (genre) {
+        if (genreArray.length !== 0) {
           dispatch(setBookSearch({
             filterBy: 'genre',
-            filterValue: genre,
+            filterValue: genreArray,
             from: '',
             to: ''
           }))
         } else {
-          return
+          handleResetForm()
         }
         break
       case 'authorSearch':
@@ -186,7 +185,7 @@ const MainPage = () => {
             to: ''
           }))
         } else {
-          return
+          handleResetForm()
         }
         break
       case 'ratingSearch':
@@ -198,7 +197,7 @@ const MainPage = () => {
             to: ratingTo
           }))
         } else {
-          return
+          handleResetForm()
         }
         break
     }
@@ -213,6 +212,24 @@ const MainPage = () => {
     }))
     setSearch('')
   }
+
+  const handleChangeGenreArray = (e:any) => {
+    const value = e.target.value
+    const rawGenreArray: any[] = [...genreArray]
+
+    if (!e.target.hasAttribute('checked')) {
+      rawGenreArray.push(value)
+      console.log('not found')
+    } else {
+      console.log('found')
+      rawGenreArray.splice((rawGenreArray.findIndex(item => item === value)), 1)
+    }
+    setGenreArray([...rawGenreArray])
+  }
+
+  useEffect(() => {
+    console.log(genreArray)
+  }, [genreArray])
   
   return (
     <Container books>
@@ -293,14 +310,53 @@ const MainPage = () => {
               </SearchForm> :
               search === 'genre' ?
               <SearchForm>
-                <SearchSelect genre id="genreSelect" onChange={handleChangeSearchValue} value={genre}>
-                  <option value=""></option>
-                  <option value="Classics">Classics</option>
-                  <option value="Detective">Detective</option>
-                  <option value="Fantasy">Fantasy</option>
-                  <option value="Horror">Horror</option>
-                  <option value="Science">Science</option>
-                </SearchSelect>
+                <GenresContainer>
+                  <span>
+                    Classics
+                    <input 
+                      defaultChecked={genreArray.includes('Classics')} 
+                      type="checkbox" 
+                      value="Classics" 
+                      onChange={handleChangeGenreArray}
+                    />
+                  </span>
+                  <span>
+                    Detective
+                    <input 
+                      defaultChecked={genreArray.includes('Detective')} 
+                      type="checkbox" 
+                      value="Detective" 
+                      onChange={handleChangeGenreArray}
+                    />
+                  </span>
+                  <span>
+                    Fantasy
+                    <input 
+                      defaultChecked={genreArray.includes('Fantasy')} 
+                      type="checkbox" 
+                      value="Fantasy" 
+                      onChange={handleChangeGenreArray}
+                    />
+                  </span>
+                  <span>
+                    Horror
+                    <input 
+                      defaultChecked={genreArray.includes('Horror')} 
+                      type="checkbox" 
+                      value="Horror" 
+                      onChange={handleChangeGenreArray}
+                    />
+                  </span>
+                  <span>
+                    Science
+                    <input 
+                      defaultChecked={genreArray.includes('Science')} 
+                      type="checkbox" 
+                      value="Science" 
+                      onChange={handleChangeGenreArray}
+                    />
+                  </span>
+                </GenresContainer>
                 <SearchButtons>
                   <Button
                     id="genreSearch"
@@ -394,7 +450,15 @@ const MainPage = () => {
                         <BookPropName>Description: </BookPropName> {item.description}
                       </BookInner>
                       <BookInner>
-                        <BookPropName>Rating: </BookPropName> {item.rating === null ? '-' : item.rating.toString().substring(0, 3)}
+                        <BookPropName>Rating:
+                          <RatingBody mainPage>
+                            <RatingActive
+                              mainPage
+                              style={{width: `${item.rating / 0.05}%`}} 
+                              id="rating-active"
+                            ></RatingActive>
+                          </RatingBody>
+                          </BookPropName> {item.rating === null ? '-' : item.rating.toString().substring(0, 3)}
                       </BookInner>
                     </UpperSection>
                     <LowerSection>
