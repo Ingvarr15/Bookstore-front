@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit"
 import { getUserReq } from '../api/getUserReq'
 import { checkToken } from "../api/checkToken"
-import socket from "../socket"
 import { setSocketReq } from "../api/setSocketReq"
 import { getRepliesReq } from "../api/getRepliesReq"
 import { checkRepliesReq } from "../api/checkRepliesReq"

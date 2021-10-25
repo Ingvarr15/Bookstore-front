@@ -5,7 +5,6 @@ import { getOneBookReq } from "../api/getOneBookReq"
 
 export interface Books {
   items: Array<any>,
-  authors: any,
   totalItems: number,
   isLoading: boolean,
   order: string,
@@ -22,7 +21,6 @@ export interface Books {
 
 const initialState: Books = {
   items: [],
-  authors: [],
   totalItems: 0,
   isLoading: false,
   order: 'asc',
@@ -162,8 +160,6 @@ export const bookSlice = createSlice({
         item.img = URL.createObjectURL(blob)
         item.img2 = item.img2 === null ? null : URL.createObjectURL(blob2)
       })
-      let rawAuthorsArr = action.payload.books.map((item: any) => item.author)
-      state.authors = Array.from(new Set(rawAuthorsArr)).sort()
       state.items = tempArr
       state.isLoading = false
       state.totalItems = action.payload.count

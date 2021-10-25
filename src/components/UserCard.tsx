@@ -1,6 +1,6 @@
 import { useAppSelector, useAppDispatch } from '../redux/hooks'
 import { fetchUser, setIsAuthorized } from '../redux/userSlice'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { signOutReq } from '../api/signOutReq'
 import { editUserReq } from '../api/editUserReq'
 import { useEffect, useRef, useState } from 'react'

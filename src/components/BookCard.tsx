@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useHistory, useLocation } from "react-router-dom"
 import { deleteBookReq } from "../api/deleteBookReq"
 import { deleteCommentReq } from "../api/deleteCommentReq"
 import { getOneBookReq } from "../api/getOneBookReq"
-import { postCommentReq } from "../api/postCommentReq"
 import { setRatingReq } from "../api/setRatingReq"
 import { fetchBooks, setChapter } from "../redux/booksSlice"
 import { fetchComments, setBookId, setText, postComment, setReplyTo } from "../redux/commentSlice"
@@ -65,7 +64,8 @@ const BookCard = ({item}: any) => {
   const [radio, setRadio] = useState(0)
   const [goldStars, setGoldStars] = useState(0)
   const [userRating, setUserRating] = useState(0)
-  const [isMainTab, setIsMainTab] = useState(true);
+  const [isMainTab, setIsMainTab] = useState(true)
+  const myRef: any = useRef()
 
   useEffect(() => {
     if (item === undefined) {
@@ -142,6 +142,8 @@ const BookCard = ({item}: any) => {
 
   const handleReplyOn = (ownerId: any, owner: any) => {
     if (!reply) {
+      myRef.current.scrollIntoView() 
+      myRef.current.select()
       setReply(true)
       setReplyTarget(owner)
       setTargetId(ownerId)
@@ -316,7 +318,7 @@ const BookCard = ({item}: any) => {
         }
         {!isTokenChecking && isAuthorized ?
           <CommentsForm onSubmit={handleSubmitComment}>
-            <CommentTextArea placeholder="Your comment..." type="text" onChange={handleChangeComment} value={comment}/>
+            <CommentTextArea ref={myRef} placeholder="Your comment..." type="text" onChange={handleChangeComment} value={comment}/>
             <Button primary type="submit">Send comment</Button>
           </CommentsForm> : ''
         }

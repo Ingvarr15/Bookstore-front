@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import { getCommentsReq } from "../api/getCommentsReq"
 import { postCommentReq } from "../api/postCommentReq"
-import { useAppDispatch } from "./hooks"
 
 export interface Comments {
 	bookId: any,

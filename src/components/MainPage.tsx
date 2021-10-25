@@ -1,18 +1,9 @@
 import { useAppDispatch, useAppSelector } from "../redux/hooks"
-import { fetchBooks, changeOrder, changeSort, setBookSearch, setChapter, setPage } from '../redux/booksSlice'
-import React, { useEffect, useState } from "react"
+import { changeOrder, changeSort, setBookSearch, setChapter, setPage } from '../redux/booksSlice'
+import { useEffect, useState } from "react"
 import Pagination from './Pagination'
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  generatePath,
-  Redirect,
-  useHistory,
-  useLocation
-} from 'react-router-dom';
-import { resetComments, setBookId } from "../redux/commentSlice";
+import { useLocation } from 'react-router-dom';
+import { resetComments } from "../redux/commentSlice";
 import {
   SearchContainer, 
   SearchElem,
@@ -41,10 +32,8 @@ import {
 
 const MainPage = () => {
   const dispatch = useAppDispatch()
-  const history = useHistory()
   const location = useLocation()
   const booksList = useAppSelector(state => state.books.items)
-  const authorsList = useAppSelector(state => state.books.authors)
   const isBooksLoading = useAppSelector(state => state.books.isLoading)
   const orderState = useAppSelector(state => state.books.order)
   const sortState = useAppSelector(state => state.books.sortBy)

@@ -19,15 +19,10 @@ import UserCard from './components/UserCard'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 import BookCard from './components/BookCard'
-import NotMatch from './components/NotMatch'
 import { checkReplies, fetchReplies, fetchToken, fetchUser, sendSocket, setSocket } from './redux/userSlice'
-import { fetchComments } from './redux/commentSlice'
 import socket from './socket'
-import { createUnparsedSourceFile } from 'typescript';
-import { getOneBookReq } from './api/getOneBookReq';
 import OneBookCard from './components/OneBookCard';
-import { 
-  Button, 
+import {
   NavBar, 
   NavUL, 
   NavLink, 
@@ -59,10 +54,8 @@ function App() {
   const emailState = useAppSelector(state => state.user.email)
   const socketState = useAppSelector(state => state.user.socket)
   const idState = useAppSelector(state => state.user.id)
-  const isRepliesLoading = useAppSelector(state => state.user.isRepliesLoading)
   const repliesState = useAppSelector(state => state.user.replies)
   const repliesCountState = useAppSelector(state => state.user.reliesCount)
-  const isUserInfoLoading = useAppSelector(state => state.user.isUserInfoLoading)
   const [isRepliesShown, setIsRepliesShown] = useState(false);
   const history = useHistory()
     
@@ -182,9 +175,7 @@ function App() {
       <MainContainer>
         <NavBar>
           <Container>
-          <NavLink logo to="/" onClick={() => changeChapter('/')}>
             <Logo>Book Store</Logo>
-          </NavLink>
           <NavUL>
           {isAuthorized ? 
             <NavListItem onClick={handleRepliesToggle}>
