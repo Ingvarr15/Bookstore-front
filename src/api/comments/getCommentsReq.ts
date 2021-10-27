@@ -1,4 +1,4 @@
-import { appAxios } from "./axios.config"
+import { appAxios } from "../axios.config"
 
 export const getCommentsReq = async (bookId: any) => {
   try {

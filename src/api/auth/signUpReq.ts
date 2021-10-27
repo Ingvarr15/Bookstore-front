@@ -1,4 +1,4 @@
-import { appAxios } from "./axios.config"
+import { appAxios } from "../axios.config"
 import { signInReq } from "./signInReq"
 
 export const signUpReq = async (username: string, email: string, password: string, dob: any) => {

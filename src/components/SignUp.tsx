@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAppSelector, useAppDispatch } from '../redux/hooks'
 import { setIsAuthorized } from '../redux/userSlice'
 import { useHistory, useLocation } from 'react-router-dom'
-import { signUpReq } from '../api/signUpReq'
+import { signUpReq } from '../api/auth/signUpReq'
 import { useEffect } from 'react'
 import { setChapter } from '../redux/booksSlice'
 import {

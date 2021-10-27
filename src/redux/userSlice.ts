@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit"
-import { getUserReq } from '../api/getUserReq'
-import { checkToken } from "../api/checkToken"
-import { setSocketReq } from "../api/setSocketReq"
-import { getRepliesReq } from "../api/getRepliesReq"
-import { checkRepliesReq } from "../api/checkRepliesReq"
+import { getUserReq } from '../api/user/getUserReq'
+import { checkToken } from "../api/auth/checkToken"
+import { setSocketReq } from "../api/auth/setSocketReq"
+import { getRepliesReq } from "../api/comments/getRepliesReq"
+import { checkRepliesReq } from "../api/comments/checkRepliesReq"
 
 export interface UserType {
   isAuthorized: boolean,
@@ -33,7 +33,7 @@ const initialState: UserType = {
   username: '',
   email: '',
   dob: '',
-  password: '123456',
+  password: '',
   role: '',
   replies: [],
   reliesCount: '',
@@ -161,18 +161,15 @@ export const userSlice = createSlice({
     
     builder.addCase(fetchToken.pending, (state, action) => {
       state.isTokenChecking = true
-      console.log('pending')
     })
     builder.addCase(fetchToken.fulfilled, (state, action) => {
       state.isAuthorized = true
       state.isTokenChecking = false
       state.isExists = true
-      console.log('fulfiilled')
     })
     builder.addCase(fetchToken.rejected, (state, action: any) => {
       state.isAuthorized = false
       state.isTokenChecking = false
-      console.log('rejected')
     })
   }
 })

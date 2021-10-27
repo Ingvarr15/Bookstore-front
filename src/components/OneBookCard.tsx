@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useHistory, useLocation } from "react-router-dom"
-import { deleteBookReq } from "../api/deleteBookReq"
+import { deleteBookReq } from "../api/book/deleteBookReq"
 import { fetchOneBook, setChapter } from "../redux/booksSlice"
 import { fetchComments, setBookId, setText, postComment, setReplyTo } from "../redux/commentSlice"
 import { useAppSelector, useAppDispatch } from "../redux/hooks"

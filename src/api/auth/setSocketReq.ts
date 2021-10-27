@@ -1,13 +1,13 @@
-import { appAxios } from "./axios.config"
+import { appAxios } from "../axios.config"
 
-export const setRatingReq = async (bookId: any, rating: any) => {
+export const setSocketReq = async (email: any, socket: any) => {
   try {
     const res: any = await appAxios({
       method: 'patch',
-          url: '/set-rating',
+          url: '/set-socket',
           data: {
-            bookId: bookId,
-            rating: rating
+            email: email,
+            socket: socket
           },
     })
     return res

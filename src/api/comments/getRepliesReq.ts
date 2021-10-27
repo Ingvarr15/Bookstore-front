@@ -1,4 +1,4 @@
-import { appAxios } from "./axios.config"
+import { appAxios } from "../axios.config"
 
 export const getRepliesReq = async (userId: any) => {
   try {

@@ -1,4 +1,4 @@
-import { appAxios } from "./axios.config"
+import { appAxios } from "../axios.config"
 
 export const deleteBookReq = async (id:any) => {
   try {

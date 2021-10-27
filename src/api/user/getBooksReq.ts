@@ -1,4 +1,4 @@
-import { appAxios } from "./axios.config"
+import { appAxios } from "../axios.config"
 
 export const getBooksReq = async (sortBy: any, order: any, filterBy: any, from:any, to: any, filterValue: any, page: any) => {
   try {

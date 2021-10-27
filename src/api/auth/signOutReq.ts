@@ -1,4 +1,4 @@
-import { appAxios } from "./axios.config"
+import { appAxios } from "../axios.config"
 
 export const signOutReq = async () => {
   try {
@@ -7,9 +7,6 @@ export const signOutReq = async () => {
       url: '/signout',
     })
     return res
-
-    // const res = await axios.post(`${baseUrl}/signout`)
-    // return res
   }
   catch (error: any) {
   }

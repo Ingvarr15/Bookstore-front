@@ -1,4 +1,4 @@
-import { appAxios } from "./axios.config"
+import { appAxios } from "../axios.config"
 
 export const postBookReq = async (uint8Array: any, uint8Array2: any, name: string, description: string, genre: string, author: string, price: number) => {
   try {
@@ -16,12 +16,6 @@ export const postBookReq = async (uint8Array: any, uint8Array2: any, name: strin
           },
     })
     return res
-
-    // const res: any = await axios.post(`${baseUrl}/api/auth/signin`, {
-    //   email: email,
-    //   password: password,
-    // })
-    // return res
   }
   catch (error: any) {
   }

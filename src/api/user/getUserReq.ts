@@ -1,4 +1,4 @@
-import { appAxios } from "./axios.config"
+import { appAxios } from "../axios.config"
 
 export const getUserReq = async () => {
   try {
@@ -7,10 +7,6 @@ export const getUserReq = async () => {
       url: '/user'
     })
     return res
-
-    // const res: any = await axios.get(`${baseUrl}/user`)
-    // console.log(res)
-    // return res
   }
   catch (error: any) {
   }

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAppDispatch } from '../redux/hooks'
 import { fetchToken, fetchUser } from '../redux/userSlice'
 import { useHistory, useLocation } from 'react-router-dom'
-import { signInReq } from '../api/signInReq'
+import { signInReq } from '../api/auth/signInReq'
 import { setChapter } from '../redux/booksSlice'
 import {
   SignForm,

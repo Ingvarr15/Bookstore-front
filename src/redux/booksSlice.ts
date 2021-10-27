@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
-import { getBooksAttributesReq } from "../api/getBooksAttributesReq"
-import { getBooksReq } from "../api/getBooksReq"
-import { getOneBookReq } from "../api/getOneBookReq"
+import { getBooksReq } from "../api/user/getBooksReq"
+import { getOneBookReq } from "../api/user/getOneBookReq"
 
 export interface Books {
   items: Array<any>,
@@ -50,14 +49,6 @@ export const fetchOneBook = createAsyncThunk(
     let state: any = api.getState()
     const res = await getOneBookReq(state.comments.bookId)
     return res
-  }
-)
-
-export const fetchBooksAttributesReq = createAsyncThunk(
-  'books/fetchAttrStatus',
-  async () => {
-    const res = await getBooksAttributesReq()
-    return res.data
   }
 )
 
