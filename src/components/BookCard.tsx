@@ -40,15 +40,12 @@ import {
   CurrentTab
 } from "../style"
 
-
 const BookCard = ({item}: any) => {
   const dispatch = useAppDispatch()
   const booksList = useAppSelector(state => state.books.items)
   const commentsList = useAppSelector(state => state.comments.items)
   const commentTextState = useAppSelector(state => state.comments.text)
   const bookId = useAppSelector(state => state.comments.bookId)
-  const isCommentsLoading = useAppSelector(state => state.comments.isCommentsLoading)
-  const lastSendingRes = useAppSelector(state => state.comments.lastSendingRes)
   const idState = useAppSelector(state => state.user.id)
   const isAuthorized = useAppSelector(state => state.user.isAuthorized)
   const isTokenChecking = useAppSelector(state => state.user.isTokenChecking)
@@ -60,8 +57,6 @@ const BookCard = ({item}: any) => {
   const [replyTarget, setReplyTarget] = useState('')
   const [targetId, setTargetId] = useState('')
   const [photo, setPhoto] = useState(1)
-  const [rating, setRating] = useState(0)
-  const [radio, setRadio] = useState(0)
   const [goldStars, setGoldStars] = useState(0)
   const [userRating, setUserRating] = useState(0)
   const [isMainTab, setIsMainTab] = useState(true)
@@ -201,20 +196,20 @@ const BookCard = ({item}: any) => {
       <BookContainer>
         <BookImages>
           <MainImg>
-            { photo === 1 ? <BookImg src={item.img}/> :
-              photo === 2 && item.img !== null ? <BookImg src={item.img2}/>
+            { photo === 1 ? <BookImg src={`http://localhost:8080/${item.img}`}/> :
+              photo === 2 && item.img2 !== null ? <BookImg src={`http://localhost:8080/${item.img2}`}/>
               : ''
             }
           </MainImg>
           <PreviewContainer>
             <Preview
-              src={item.img} 
+              src={`http://localhost:8080/${item.img}`}
               active={photo === 1 ? true : false}
               onClick={() => handleChangePhoto(1)}
             />
             { item.img2 !== null ? 
             <Preview 
-              src={item.img2} 
+              src={`http://localhost:8080/${item.img2}`} 
               active={photo === 2 ? true : false}
               onClick={() => handleChangePhoto(2)}
             /> :

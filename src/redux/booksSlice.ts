@@ -87,32 +87,7 @@ export const bookSlice = createSlice({
     })
     builder.addCase(fetchOneBook.fulfilled, (state, action) => {
       if (action.payload !== undefined) {
-        let tempObj = action.payload
-        const b64toBlob = (b64Data: any, contentType='', sliceSize=512) => {
-          const byteCharacters = atob(b64Data)
-          const byteArrays = []
-        
-          for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-            const slice = byteCharacters.slice(offset, offset + sliceSize);
-        
-            const byteNumbers = new Array(slice.length)
-            for (let i = 0; i < slice.length; i++) {
-              byteNumbers[i] = slice.charCodeAt(i)
-            }
-        
-            const byteArray = new Uint8Array(byteNumbers)
-            byteArrays.push(byteArray)
-          }
-        
-          const blob = new Blob(byteArrays, {type: contentType})
-          return blob
-        }
-        const blob = b64toBlob(tempObj.img, 'image/png')
-        const blob2 = b64toBlob(tempObj.img2, 'image/png')
-        const blobUrl = URL.createObjectURL(blob)
-        tempObj.img = URL.createObjectURL(blob)
-        tempObj.img2 = tempObj.img2 === null ? null : URL.createObjectURL(blob2)
-        state.oneBook = tempObj
+        state.oneBook = action.payload
         state.isBookFound = true
       } else {
         state.isBookFound = false
@@ -124,34 +99,7 @@ export const bookSlice = createSlice({
     })
     
     builder.addCase(fetchBooks.fulfilled, (state, action) => {
-      const tempArr:any = action.payload.books
-      tempArr.forEach((item: any) => {
-        const b64toBlob = (b64Data: any, contentType='', sliceSize=512) => {
-          const byteCharacters = atob(b64Data)
-          const byteArrays = []
-        
-          for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-            const slice = byteCharacters.slice(offset, offset + sliceSize);
-        
-            const byteNumbers = new Array(slice.length)
-            for (let i = 0; i < slice.length; i++) {
-              byteNumbers[i] = slice.charCodeAt(i)
-            }
-        
-            const byteArray = new Uint8Array(byteNumbers)
-            byteArrays.push(byteArray)
-          }
-        
-          const blob = new Blob(byteArrays, {type: contentType})
-          return blob
-        }
-        const blob = b64toBlob(item.img, 'image/png')
-        const blob2 = b64toBlob(item.img2, 'image/png')
-        const blobUrl = URL.createObjectURL(blob)
-        item.img = URL.createObjectURL(blob)
-        item.img2 = item.img2 === null ? null : URL.createObjectURL(blob2)
-      })
-      state.items = tempArr
+      state.items = action.payload.books
       state.isLoading = false
       state.totalItems = action.payload.count
     })

@@ -422,7 +422,7 @@ const MainPage = () => {
             booksList.map(item =>
               <BookLI key={item.id}>
                 <BookLink to={`/book/${item.id}`}>
-                  <BookCardImage src={item.img} />
+                  <BookCardImage src={`http://localhost:8080/${item.img}`} />
                   <BookDescription>
                     <UpperSection>
                       <h3>{item.name}</h3>
