@@ -179,7 +179,7 @@ function App() {
           <NavUL>
           {isAuthorized ? 
             <NavListItem onClick={handleRepliesToggle}>
-              <ReplyLogo shown={isRepliesShown ? "true" : "false"}><i className="fas fa-bell"></i> {repliesCountState}</ReplyLogo>
+              <ReplyLogo shown={isRepliesShown ? 1 : 0}><i className="fas fa-bell"></i> {repliesCountState}</ReplyLogo>
               {isRepliesShown ? 
                 <Replies>
                   <ReplyUL>
