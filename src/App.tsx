@@ -55,7 +55,7 @@ function App() {
   const socketState = useAppSelector(state => state.user.socket)
   const idState = useAppSelector(state => state.user.id)
   const repliesState = useAppSelector(state => state.user.replies)
-  const repliesCountState = useAppSelector(state => state.user.reliesCount)
+  const repliesCountState = useAppSelector(state => state.user.repliesCount)
   const [isRepliesShown, setIsRepliesShown] = useState(false);
   const history = useHistory()
     
@@ -97,7 +97,7 @@ function App() {
     dispatch(fetchUser())
     dispatch(setChapter(location.pathname))
   }, [])
-
+  
   useEffect(() => {
     socket.on('newReply', () => {
       if (idState !== '') {
@@ -179,7 +179,7 @@ function App() {
           <NavUL>
           {isAuthorized ? 
             <NavListItem onClick={handleRepliesToggle}>
-              <ReplyLogo shown={isRepliesShown ? 1 : 0}><i className="fas fa-bell"></i> {repliesCountState}</ReplyLogo>
+              <ReplyLogo shown={isRepliesShown ? 1 : 0}><i className="fas fa-bell"></i> {repliesCountState || ''}</ReplyLogo>
               {isRepliesShown ? 
                 <Replies>
                   <ReplyUL>

@@ -1,5 +1,5 @@
 import { useAppSelector, useAppDispatch } from '../redux/hooks'
-import { fetchUser, setIsAuthorized } from '../redux/userSlice'
+import { fetchUser, reset, setIsAuthorized } from '../redux/userSlice'
 import { useLocation } from 'react-router-dom'
 import { signOutReq } from '../api/auth/signOutReq'
 import { editUserReq } from '../api/user/editUserReq'
@@ -41,6 +41,7 @@ const UserCard = () => {
   const role = useAppSelector(state => state.user.role)
   const isExists = useAppSelector(state => state.user.isExists)
   const avatar = useAppSelector(state => state.user.avatar)
+  const isAuthorized = useAppSelector(state => state.user.isAuthorized)
 
   useEffect(() => {
     dispatch(fetchUser())
@@ -162,10 +163,12 @@ const UserCard = () => {
   }
 
   const handleSignOut = async () => {
-    await signOutReq()
-    dispatch(
-      setIsAuthorized(false)
-    )
+    const res: any = await signOutReq()
+    if (res && res.status === 200) {
+      dispatch(
+        setIsAuthorized(false)
+      )
+    }
   }
 
   const handleAdmin = () => {

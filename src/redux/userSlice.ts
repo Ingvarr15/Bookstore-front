@@ -17,7 +17,7 @@ export interface UserType {
   password: string,
   role: string,
   replies: any,
-  reliesCount: any,
+  repliesCount: any,
   ratings: any,
   isTokenChecking: boolean,
   isExists: boolean,
@@ -36,7 +36,7 @@ const initialState: UserType = {
   password: '',
   role: '',
   replies: [],
-  reliesCount: '',
+  repliesCount: '',
   ratings: [],
   isTokenChecking: false,
   isExists: true,
@@ -93,8 +93,19 @@ export const userSlice = createSlice({
     setUsername: (state, action: PayloadAction<string>) => {
       state.username = action.payload
     },
+    reset: state => initialState,
     setIsAuthorized: (state, action: PayloadAction<boolean>) => {
       state.isAuthorized = action.payload
+      if (action.payload === false) {
+        state.avatar = null
+        state.username = ''
+        state.email = ''
+        state.id = ''
+        state.dob = ''
+        state.role = ''
+        state.replies = []
+        state.repliesCount = ''
+      }
     },
     getRole: (state): any => {
       return state.role
@@ -129,7 +140,7 @@ export const userSlice = createSlice({
 
     builder.addCase(fetchReplies.fulfilled, (state, action) => {
       state.replies = action.payload.repliesItems
-      state.reliesCount = action.payload.count
+      state.repliesCount = action.payload.count
     })
 
     builder.addCase(sendSocket.pending, (state, action) => {
@@ -154,5 +165,5 @@ export const userSlice = createSlice({
   }
 })
 
-export const { setUsername, setIsAuthorized, getRole, setSocket } = userSlice.actions
+export const { setUsername, setIsAuthorized, getRole, setSocket, reset } = userSlice.actions
 export default userSlice.reducer
