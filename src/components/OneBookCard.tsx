@@ -131,7 +131,7 @@ const OneBookCard = () => {
   useEffect(() => {
     localDispatch({ type: 'goldStars', payload: item.rating / 0.05 })
     localDispatch({ type: 'userRating', payload: calculateUserRating() })
-  }, [booksList, userRatingsState])
+  }, [item, userRatingsState])
 
   const calculateUserRating = () => {
     const userRating = userRatingsState.find((rating: any) => rating.book === item.id)
@@ -209,7 +209,7 @@ const OneBookCard = () => {
   const handleChangeRadio = async (e: any) => {
     const res: any = await setRatingReq(item.id, e.target.id)
     if (res && res.status === 200) {
-      dispatch(fetchBooks())
+      dispatch(fetchOneBook())
       dispatch(fetchUser())
     }
   }
