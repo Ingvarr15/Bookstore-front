@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../redux/hooks"
 import { changeOrder, changeSort, setBookSearch, setChapter, setPage } from '../redux/booksSlice'
-import { useEffect, useState } from "react"
+import { useEffect, useReducer } from "react"
 import Pagination from './Pagination'
 import { useLocation } from 'react-router-dom';
 import { resetComments } from "../redux/commentSlice";
@@ -41,15 +41,76 @@ const MainPage = () => {
   const fromState = useAppSelector(state => state.books.from)
   const toState = useAppSelector(state => state.books.to)
   const filterValueState = useAppSelector(state => state.books.filterValue)
-  const [order, setOrder] = useState(orderState)
-  const [sort, setSort] = useState(sortState)
-  const [search, setSearch] = useState(filterByState)
-  const [priceFrom, setPriceFrom] = useState(filterByState === 'price' ? fromState : '')
-  const [priceTo, setPriceTo] = useState(filterByState === 'price' ? toState : '')
-  const [ratingFrom, setRatingFrom] = useState(filterByState === 'rating' ? fromState : '')
-  const [ratingTo, setRatingTo] = useState(filterByState === 'rating' ? toState : '')
-  const [author, setAuthor] = useState('')
-  const [genreArray, setGenreArray]: any[] = useState([]);
+
+  const initialState = {
+    order: orderState,
+    sort: sortState,
+    search: filterByState,
+    priceFrom: filterByState === 'price' ? fromState : '',
+    priceTo: filterByState === 'price' ? toState : '',
+    ratingFrom: filterByState === 'rating' ? fromState : '',
+    ratingTo: filterByState === 'rating' ? toState : '',
+    author: '',
+    genreArray: []
+  }
+
+  function resetState() {
+    return {...initialState}
+  }
+  
+  function reducer(state: any, action: any) {
+    switch (action.type) {
+      case 'reset':
+        return resetState()
+      case 'sort':
+        return {
+          ...state,
+          sort: action.payload
+        }
+      case 'order':
+        return {
+          ...state,
+          order: action.payload
+        }
+      case 'search':
+        return {
+          ...state,
+          search: action.payload
+        }
+      case 'priceFrom':
+        return {
+          ...state,
+          priceFrom: action.payload
+        }
+      case 'priceTo':
+        return {
+          ...state,
+          priceTo: action.payload
+        }
+      case 'ratingFrom':
+        return {
+          ...state,
+          ratingFrom: action.payload
+        }
+      case 'ratingTo':
+        return {
+          ...state,
+          ratingTo: action.payload
+        }
+      case 'author':
+        return {
+          ...state,
+          author: action.payload
+        }
+      case 'genreArray':
+        return {
+          ...state,
+          genreArray: action.payload
+        }
+    } 
+  }
+
+  const [data, localDispatch] = useReducer(reducer, initialState, resetState)
 
   useEffect(() => {
     dispatch(setChapter(location.pathname))
@@ -57,56 +118,56 @@ const MainPage = () => {
   }, [])
 
   useEffect(() => {
-    setSort(sortState)
-    setOrder(orderState)
-    setSearch(filterByState)
-    setPriceFrom(filterByState === 'price' ? fromState : '')
-    setPriceTo(filterByState === 'price' ? toState : '')
-    setRatingFrom(filterByState === 'rating' ? fromState : '')
-    setRatingTo(filterByState === 'rating' ? toState : '')
-    setAuthor(filterByState === 'author' ? filterValueState : '')
-    setGenreArray(filterByState === 'genre' ? filterValueState : [])
+    localDispatch({ type: 'sort', payload: sortState })
+    localDispatch({ type: 'order', payload: orderState })
+    localDispatch({ type: 'search', payload: filterByState })
+    localDispatch({ type: 'priceFrom', payload: filterByState === 'price' ? fromState : '' })
+    localDispatch({ type: 'priceTo', payload: filterByState === 'price' ? toState : '' })
+    localDispatch({ type: 'ratingFrom', payload: filterByState === 'rating' ? fromState : '' })
+    localDispatch({ type: 'ratingTo', payload: filterByState === 'rating' ? toState : '' })
+    localDispatch({ type: 'author', payload: filterByState === 'author' ? filterValueState : '' })
+    localDispatch({ type: 'genreArray', payload: filterByState === 'genre' ? filterValueState : [] })
   }, [filterByState, fromState, toState, filterValueState, sortState, orderState])
 
   useEffect(() => {
-    dispatch(changeOrder(order))
-  }, [order])
+    dispatch(changeOrder(data.order))
+  }, [data.order])
 
   useEffect(() => {
-    dispatch(changeSort(sort))
-  }, [sort])
+    dispatch(changeSort(data.sort))
+  }, [data.sort])
 
   const handleChangeOrder = () => {
-    setOrder(order === 'asc' ? 'desc' : 'asc')
+    localDispatch({ type: 'order', payload: data.order === 'asc' ? 'desc' : 'asc' })
   }
 
   const handleChangeSort = (e: any) => {
       switch (e.currentTarget.value) {
         case 'createdAt':
-          setSort('createdAt')
+          localDispatch({ type: 'sort', payload: 'createdAt' })
           break
         case 'genre':
-          setSort('genre')
+          localDispatch({ type: 'sort', payload: 'genre' })
           break
         case 'author':
-          setSort('author')
+          localDispatch({ type: 'sort', payload: 'author' })
           break
         case 'price':
-          setSort('price')
+          localDispatch({ type: 'sort', payload: 'price' })
           break
         case 'rating':
-          setSort('rating')
+          localDispatch({ type: 'sort', payload: 'rating' })
           break
       }
     }
 
   const handleChangeSearchType = (e: any) => {
-    setPriceFrom('')
-    setPriceTo('')
-    setRatingFrom('')
-    setRatingTo('')
-    setAuthor('')
-    setSearch(e.currentTarget.value)
+    localDispatch({ type: 'search', payload: e.currentTarget.value })
+    localDispatch({ type: 'priceFrom', payload: '' })
+    localDispatch({ type: 'priceTo', payload: '' })
+    localDispatch({ type: 'ratingFrom', payload: '' })
+    localDispatch({ type: 'ratingTo', payload: '' })
+    localDispatch({ type: 'author', payload: '' })
     if (!e.currentTarget.value) {
       dispatch(setBookSearch({
         filterBy: '',
@@ -120,19 +181,19 @@ const MainPage = () => {
   const handleChangeSearchValue = (e: any) => {
     switch (e.currentTarget.id) {
       case 'priceFrom':
-        setPriceFrom(e.currentTarget.value)
+        localDispatch({ type: 'priceFrom', payload: e.currentTarget.value })
         break
       case 'priceTo':
-        setPriceTo(e.currentTarget.value)
+        localDispatch({ type: 'priceTo', payload: e.currentTarget.value })
         break
       case 'ratingFrom':
-        setRatingFrom(e.currentTarget.value)
+        localDispatch({ type: 'ratingFrom', payload: e.currentTarget.value })
         break
       case 'ratingTo':
-        setRatingTo(e.currentTarget.value)
+        localDispatch({ type: 'ratingTo', payload: e.currentTarget.value })
         break
       case 'authorSelect':
-        setAuthor(e.target.value)
+        localDispatch({ type: 'author', payload: e.target.value })
         break
     }
   }
@@ -142,22 +203,22 @@ const MainPage = () => {
     dispatch(setPage(1))
     switch (e.target.id) {
       case 'priceSearch':
-        if (priceFrom || priceTo) {
+        if (data.priceFrom || data.priceTo) {
           dispatch(setBookSearch({
             filterBy: 'price',
             filterValue: '',
-            from: priceFrom,
-            to: priceTo
+            from: data.priceFrom,
+            to: data.priceTo
           }))
         } else {
           handleResetForm()
         }
         break
       case 'genreSearch':
-        if (genreArray.length !== 0) {
+        if (data.genreArray.length !== 0) {
           dispatch(setBookSearch({
             filterBy: 'genre',
-            filterValue: genreArray,
+            filterValue: data.genreArray,
             from: '',
             to: ''
           }))
@@ -166,10 +227,10 @@ const MainPage = () => {
         }
         break
       case 'authorSearch':
-        if (author) {
+        if (data.author) {
           dispatch(setBookSearch({
             filterBy: 'author',
-            filterValue: author,
+            filterValue: data.author,
             from: '',
             to: ''
           }))
@@ -178,12 +239,12 @@ const MainPage = () => {
         }
         break
       case 'ratingSearch':
-        if (ratingFrom || ratingTo) {
+        if (data.ratingFrom || data.ratingTo) {
           dispatch(setBookSearch({
             filterBy: 'rating',
             filterValue: '',
-            from: ratingFrom,
-            to: ratingTo
+            from: data.ratingFrom,
+            to: data.ratingTo
           }))
         } else {
           handleResetForm()
@@ -199,23 +260,20 @@ const MainPage = () => {
       from: '',
       to: ''
     }))
-    setSearch('')
+    localDispatch({ type: 'search', payload: '' })
   }
 
   const handleChangeGenreArray = (e:any) => {
     const value = e.target.value
-    const rawGenreArray: any[] = [...genreArray]
+    const rawGenreArray: any[] = [...data.genreArray]
 
     if (!e.target.hasAttribute('checked')) {
       rawGenreArray.push(value)
     } else {
       rawGenreArray.splice((rawGenreArray.findIndex(item => item === value)), 1)
     }
-    setGenreArray([...rawGenreArray])
+    localDispatch({ type: 'genreArray', payload: [...rawGenreArray] })
   }
-
-  useEffect(() => {
-  }, [genreArray])
   
   return (
     <Container books>
@@ -229,11 +287,11 @@ const MainPage = () => {
             primary
             formButton
             onClick={handleChangeOrder}
-          >{order === 'asc' ? 'Descending' : 'Ascending'}</Button>
+          >{data.order === 'asc' ? 'Descending' : 'Ascending'}</Button>
         </SearchElem>
         <SearchElem>
         <span>Sort by: </span>
-          <SearchSelect onChange={handleChangeSort} value={sort}>
+          <SearchSelect onChange={handleChangeSort} value={data.sort}>
             <option value="createdAt">Added time</option>
             <option value="genre">Genre</option>
             <option value="author">Author</option>
@@ -244,7 +302,7 @@ const MainPage = () => {
         <SearchElem>
           <span>Search: </span>
             <SearchSelect
-              value={search}
+              value={data.search}
               onChange={handleChangeSearchType}>
               <option value=""></option>
               <option
@@ -260,14 +318,14 @@ const MainPage = () => {
                 value="rating"
               >rating</option>
             </SearchSelect>
-            { search === 'price' ?
+            { data.search === 'price' ?
               <SearchForm>
                 <FromToContainer>
                   <SearchInput 
                     id="priceFrom"
                     type="number"
                     min="0"
-                    value={priceFrom}
+                    value={data.priceFrom}
                     onChange={handleChangeSearchValue}
                   />
                   <span> - </span>
@@ -275,7 +333,7 @@ const MainPage = () => {
                     id="priceTo"
                     type="number"
                     min="0"
-                    value={priceTo}
+                    value={data.priceTo}
                     onChange={handleChangeSearchValue}
                   />
                 </FromToContainer>
@@ -294,13 +352,13 @@ const MainPage = () => {
                   >Reset form</Button>
                 </SearchButtons>
               </SearchForm> :
-              search === 'genre' ?
+              data.search === 'genre' ?
               <SearchForm>
                 <GenresContainer>
                   <span>
                     Classics
                     <input 
-                      defaultChecked={genreArray.includes('Classics')} 
+                      defaultChecked={data.genreArray.includes('Classics')} 
                       type="checkbox" 
                       value="Classics" 
                       onChange={handleChangeGenreArray}
@@ -309,7 +367,7 @@ const MainPage = () => {
                   <span>
                     Detective
                     <input 
-                      defaultChecked={genreArray.includes('Detective')} 
+                      defaultChecked={data.genreArray.includes('Detective')} 
                       type="checkbox" 
                       value="Detective" 
                       onChange={handleChangeGenreArray}
@@ -318,7 +376,7 @@ const MainPage = () => {
                   <span>
                     Fantasy
                     <input 
-                      defaultChecked={genreArray.includes('Fantasy')} 
+                      defaultChecked={data.genreArray.includes('Fantasy')} 
                       type="checkbox" 
                       value="Fantasy" 
                       onChange={handleChangeGenreArray}
@@ -327,7 +385,7 @@ const MainPage = () => {
                   <span>
                     Horror
                     <input 
-                      defaultChecked={genreArray.includes('Horror')} 
+                      defaultChecked={data.genreArray.includes('Horror')} 
                       type="checkbox" 
                       value="Horror" 
                       onChange={handleChangeGenreArray}
@@ -336,7 +394,7 @@ const MainPage = () => {
                   <span>
                     Science
                     <input 
-                      defaultChecked={genreArray.includes('Science')} 
+                      defaultChecked={data.genreArray.includes('Science')} 
                       type="checkbox" 
                       value="Science" 
                       onChange={handleChangeGenreArray}
@@ -358,11 +416,11 @@ const MainPage = () => {
                   >Reset form</Button>
                 </SearchButtons>
               </SearchForm> :
-              search === 'author' ?
+              data.search === 'author' ?
               <SearchForm>
                 <SearchInput author type="text" id="authorSelect" 
                   onChange={handleChangeSearchValue}
-                  value={author}
+                  value={data.author}
                 />
                 <SearchButtons>
                   <Button
@@ -379,14 +437,14 @@ const MainPage = () => {
                   >Reset form</Button>
                 </SearchButtons>
               </SearchForm> :
-              search === 'rating' ?
+              data.search === 'rating' ?
               <SearchForm>
                 <FromToContainer>
                   <SearchInput 
                     id="ratingFrom"
                     type="number"
                     min="0"
-                    value={ratingFrom}
+                    value={data.ratingFrom}
                     onChange={handleChangeSearchValue}
                   />
                   <span> - </span>
@@ -394,7 +452,7 @@ const MainPage = () => {
                     id="ratingTo"
                     type="number"
                     min="0"
-                    value={ratingTo}
+                    value={data.ratingTo}
                     onChange={handleChangeSearchValue}
                   />
                 </FromToContainer>
