@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useReducer } from "react"
 import { postBookReq } from "../api/book/postBookReq"
 import {
   AdminFormContainer, 
@@ -10,24 +10,71 @@ import {
   AdminCardSelect
 } from '../style'
 
-const AdminForm = () => {
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [genre, setGenre] = useState('')
-  const [author, setAuthor] = useState('')
-  const [price, setPrice] = useState(0)
+function resetState() {
+  return {...initialState}
+}
 
+function reducer(state: any, action: any) {
+  switch (action.type) {
+    case 'reset':
+      return resetState()
+    case 'name':
+      return {
+        ...state,
+        name: action.payload
+      }
+    case 'description':
+      return {
+        ...state,
+        description: action.payload
+      }
+    case 'genre':
+      return {
+        ...state,
+        genre: action.payload
+      }
+    case 'author':
+      return {
+        ...state,
+        author: action.payload
+      }
+    case 'price':
+      return {
+        ...state,
+        price: action.payload
+      }
+  } 
+}
+
+const initialState = {
+  name: '',
+  description: '',
+  genre: '',
+  author: '',
+  price: 0
+}
+
+const AdminForm = () => {
   const fileRef = useRef<any>(null)
   const fileRef2 = useRef<any>(null)
+  const inpRef = useRef<any>(null)
+  const inpRef2 = useRef<any>(null)
   const [loading, setLoading] = useState(false)
+
+  const [data, localDispatch] = useReducer(reducer, initialState, resetState)
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
 
     const fetchData = async (uint8Array: any, uint8Array2: any) => {
       try {
-        const res = await postBookReq(uint8Array, uint8Array2, name, description, genre, author, price)
+        const res = await postBookReq(uint8Array, uint8Array2, data.name, data.description, data.genre, data.author, data.price)
         setLoading(false)
+        if (res && res.status === 200) {
+          localDispatch({ type: 'reset' })
+          inpRef.current.value = null
+          inpRef2.current.value = null
+        }
       } catch (error) {
       }
     }
@@ -57,19 +104,19 @@ const AdminForm = () => {
 
   const handleChange = (e: any) => {
     if (e.currentTarget.name === 'name') {
-      setName(e.currentTarget.value)
+      localDispatch({ type: 'name', payload: e.currentTarget.value})
     }
     if (e.currentTarget.name === 'description') {
-      setDescription(e.currentTarget.value)
+      localDispatch({ type: 'description', payload: e.currentTarget.value})
     }
     if (e.currentTarget.name === 'genre') {
-      setGenre(e.currentTarget.value)
+      localDispatch({ type: 'genre', payload: e.currentTarget.value})
     }
     if (e.currentTarget.name === 'author') {
-      setAuthor(e.currentTarget.value)
+      localDispatch({ type: 'author', payload: e.currentTarget.value})
     }
     if (e.currentTarget.name === 'price') {
-      setPrice(e.currentTarget.value)
+      localDispatch({ type: 'price', payload: e.currentTarget.value})
     }
   }
 
@@ -81,7 +128,7 @@ const AdminForm = () => {
         name="name"
         placeholder="Name"
         onChange={handleChange} 
-        value={name}
+        value={data.name}
         required
       />
       <AdminCardDescription 
@@ -89,11 +136,11 @@ const AdminForm = () => {
         name="description"
         placeholder="Description"
         onChange={handleChange} 
-        value={description}
+        value={data.description}
         required
       />
       <BookProp>Genre:</BookProp>
-      <AdminCardSelect name="genre" required onChange={handleChange} value={genre}>
+      <AdminCardSelect name="genre" required onChange={handleChange} value={data.genre}>
         <option value=""></option>
         <option value="Classics">Classics</option>
         <option value="Detective">Detective</option>
@@ -106,7 +153,7 @@ const AdminForm = () => {
         type="text" 
         name="author" 
         onChange={handleChange} 
-        value={author}
+        value={data.author}
         required
       />
       <BookProp>Price:</BookProp>
@@ -116,11 +163,12 @@ const AdminForm = () => {
         min="1"
         step="0.01"
         onChange={handleChange} 
-        value={price}
+        value={data.price}
         required
       />
       <BookProp>Cover:</BookProp>
       <AdminInput
+        ref={inpRef}
         onChange={(e: any) => fileRef.current = e.target.files}
         accept="image/*"
         type="file"
@@ -129,6 +177,7 @@ const AdminForm = () => {
       />
       <BookProp>Text sample (optional):</BookProp>
       <AdminInput
+        ref={inpRef2}
         onChange={(e: any) => fileRef2.current = e.target.files}
         accept="image/*"
         type="file"

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useReducer, useRef, useState } from "react"
 import { useHistory, useLocation } from "react-router-dom"
 import { deleteBookReq } from "../api/book/deleteBookReq"
 import { deleteCommentReq } from "../api/comments/deleteCommentReq"
@@ -40,6 +40,62 @@ import {
   CurrentTab
 } from "../style"
 
+function resetState() {
+  return {...initialState}
+}
+
+function reducer(state: any, action: any) {
+  switch (action.type) {
+    case 'reset':
+      return resetState()
+    case 'goldStars':
+      return {
+        ...state,
+        goldStars: action.payload
+      }
+    case 'userRating':
+      return {
+        ...state,
+        userRating: action.payload
+      }
+    case 'comment':
+      return {
+        ...state,
+        comment: action.payload
+      }
+    case 'setReply':
+      return {
+        ...state,
+        reply: !state.reply
+      }
+    case 'replyTarget':
+      return {
+        ...state,
+        replyTarget: action.payload
+      }
+    case 'photo':
+      return {
+        ...state,
+        photo: action.payload
+      }
+    case 'isMainTab':
+      return {
+        ...state,
+        isMainTab: !state.isMainTab
+      }
+  } 
+}
+
+const initialState = {
+  comment: '',
+  reply: false,
+  replyTarget: '',
+  photo: 1,
+  goldStars: 0,
+  userRating: 0,
+  isMainTab: true,
+}
+
 const BookCard = ({item}: any) => {
   const dispatch = useAppDispatch()
   const booksList = useAppSelector(state => state.books.items)
@@ -52,14 +108,7 @@ const BookCard = ({item}: any) => {
   const userRatingsState = useAppSelector(state => state.user.ratings)
   const location = useLocation()
   const history = useHistory()
-  const [comment, setComment] = useState('')
-  const [reply, setReply] = useState(false)
-  const [replyTarget, setReplyTarget] = useState('')
-  const [targetId, setTargetId] = useState('')
-  const [photo, setPhoto] = useState(1)
-  const [goldStars, setGoldStars] = useState(0)
-  const [userRating, setUserRating] = useState(0)
-  const [isMainTab, setIsMainTab] = useState(true)
+  const [data, localDispatch] = useReducer(reducer, initialState, resetState)
   const myRef: any = useRef()
 
   useEffect(() => {
@@ -69,8 +118,8 @@ const BookCard = ({item}: any) => {
   }, [])
 
   useEffect(() => {
-    setGoldStars(item.rating / 0.05)
-    setUserRating(calculateUserRating())
+    localDispatch({ type: 'goldStars', payload: item.rating / 0.05 })
+    localDispatch({ type: 'userRating', payload: calculateUserRating() })
   }, [booksList, userRatingsState])
 
   const calculateUserRating = () => {
@@ -125,43 +174,41 @@ const BookCard = ({item}: any) => {
   }
 
   const handleChangeComment = (e: any) => {
-    setComment(e.currentTarget.value)
+    localDispatch({ type: 'comment', payload: e.currentTarget.value })
   }
 
   const handleSubmitComment = (e: any) => {
     e.preventDefault()
-    dispatch(setText(comment))
-    socket.emit('comment', comment)
-    setComment('')
+    dispatch(setText(data!.comment))
+    socket.emit('comment', data!.comment)
+    localDispatch({ type: 'comment', payload: '' })
   }
 
   const handleReplyOn = (ownerId: any, owner: any) => {
-    if (!reply) {
+    if (!data.reply) {
       myRef.current.scrollIntoView() 
       myRef.current.select()
-      setReply(true)
-      setReplyTarget(owner)
-      setTargetId(ownerId)
+      localDispatch({ type: 'setReply' })
+      localDispatch({ type: 'replyTarget', payload: owner })
       dispatch(setReplyTo(ownerId))
-    } else if (reply) {
-      setReply(false)
-      setReplyTarget('')
-      setTargetId('')
+    } else if (data.reply) {
+      localDispatch({ type: 'setReply' })
+      localDispatch({ type: 'replyTarget', payload: '' })
       dispatch(setReplyTo(''))
     }
   }
 
   const handleReplyOff = () => {
-    if (reply) {
-      setReply(false)
-      setReplyTarget('')
-      setTargetId('')
+    if (data.reply) {
+      localDispatch({ type: 'setReply' })
+      localDispatch({ type: 'replyTarget', payload: '' })
+
       dispatch(setReplyTo(''))
     }
   }
 
   const handleChangePhoto = (img: number) => {
-    setPhoto(img)
+    localDispatch({ type: 'photo', payload: img })
   }
 
   const handleDeleteComment = async (id: number) => {
@@ -180,15 +227,15 @@ const BookCard = ({item}: any) => {
   }
 
   const handleEnterMouse = (e: any) => {
-    setUserRating(e.currentTarget.dataset.percent)
+    localDispatch({ type: 'userRating', payload: e.currentTarget.dataset.percent })
   }
 
   const handleLeaveMouse = () => {
-    setUserRating(calculateUserRating())
+    localDispatch({ type: 'userRating', payload: calculateUserRating() })
   }
 
-  const handleChangeTab = (bool: boolean) => {
-    setIsMainTab(bool)
+  const handleChangeTab = () => {
+    localDispatch({ type: 'isMainTab' })
   }
  
   return (
@@ -196,21 +243,21 @@ const BookCard = ({item}: any) => {
       <BookContainer>
         <BookImages>
           <MainImg>
-            { photo === 1 ? <BookImg src={`http://localhost:8080/${item.img}`}/> :
-              photo === 2 && item.img2 !== null ? <BookImg src={`http://localhost:8080/${item.img2}`}/>
+            { data!.photo === 1 ? <BookImg src={`http://localhost:8080/${item.img}`}/> :
+              data!.photo === 2 && item.img2 !== null ? <BookImg src={`http://localhost:8080/${item.img2}`}/>
               : ''
             }
           </MainImg>
           <PreviewContainer>
             <Preview
               src={`http://localhost:8080/${item.img}`}
-              active={photo === 1 ? true : false}
+              active={data!.photo === 1 ? true : false}
               onClick={() => handleChangePhoto(1)}
             />
             { item.img2 !== null ? 
             <Preview 
               src={`http://localhost:8080/${item.img2}`} 
-              active={photo === 2 ? true : false}
+              active={data!.photo === 2 ? true : false}
               onClick={() => handleChangePhoto(2)}
             /> :
             ''
@@ -221,15 +268,15 @@ const BookCard = ({item}: any) => {
           <h2>{item.name}</h2>
             <BookTabs>
               <Tab 
-                current={isMainTab ? true : false}
-                onClick={() => handleChangeTab(true)}
+                current={data!.isMainTab ? true : false}
+                onClick={handleChangeTab}
               >Main</Tab>
               <Tab 
-                current={!isMainTab ? true : false}
-                onClick={() => handleChangeTab(false)}
+                current={!data!.isMainTab ? true : false}
+                onClick={handleChangeTab}
               >About book</Tab>
             </BookTabs>
-            { isMainTab ? 
+            { data!.isMainTab ? 
               <CurrentTab>
                 <BookInner>
                   <BookPropName>Price: </BookPropName>€{item.price}
@@ -241,11 +288,11 @@ const BookCard = ({item}: any) => {
                       onMouseLeave={handleLeaveMouse}
                     >
                       <RatingActive 
-                        style={{width: `${goldStars}%`}} 
+                        style={{width: `${data!.goldStars}%`}} 
                         id="rating-active"
                       ></RatingActive>
                       <RatingOfUser
-                        style={{width: `${userRating}%`}}            
+                        style={{width: `${data!.userRating}%`}}            
                       ></RatingOfUser>
                       <RatingItems>
                         <RatingItem name="rating" onMouseEnter={handleEnterMouse} onChange={handleChangeRadio} type="radio" id="1" data-percent="20"/>
@@ -304,16 +351,16 @@ const BookCard = ({item}: any) => {
           }
         </CommentsUL>
         <div>
-        {reply ? 
+        {data!.reply ? 
           <ReplyAlert>
-            <ReplyAlertInner>Replying to {replyTarget}</ReplyAlertInner>
+            <ReplyAlertInner>Replying to {data!.replyTarget}</ReplyAlertInner>
             <Button user onClick={handleReplyOff}>Cancel</Button>
           </ReplyAlert> :
           <ReplyAlert></ReplyAlert>
         }
         {!isTokenChecking && isAuthorized ?
           <CommentsForm onSubmit={handleSubmitComment}>
-            <CommentTextArea ref={myRef} placeholder="Your comment..." type="text" onChange={handleChangeComment} value={comment}/>
+            <CommentTextArea ref={myRef} placeholder="Your comment..." type="text" onChange={handleChangeComment} value={data!.comment}/>
             <Button primary type="submit">Send comment</Button>
           </CommentsForm> : ''
         }

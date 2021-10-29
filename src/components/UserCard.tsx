@@ -237,13 +237,13 @@ const UserCard = () => {
             </UserPropContainer>
             { role === 'Admin' ? 
               <Button
+                user
                 onClick={handleAdmin}
               >Admin Card</Button> :
               ''
             }
             <Button
               onClick={handleSignOut}
-              user
               primary
             >Sign out</Button>
           </UserParagraph>

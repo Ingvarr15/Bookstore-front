@@ -386,7 +386,7 @@ export const Button = styled.button<any>`
     margin-top: 10px;
   `}
   ${props => props.user && `
-    margin-left: 5px;
+    margin-right: 5px;
   `}
   ${props => props.sign && `
     margin-top: 30px;
@@ -410,17 +410,6 @@ export const SearchContainer = styled.div<any>`
   z-index: 1000;
   border: 1px solid #cc4147;
 `
-// &:after {
-//   content: "";
-//   position: absolute;
-//   bottom: -10px;
-//   left: 50%;
-//   transform: translateX(-50%);
-//   width: 98vw;
-//   height: 1px;
-//   background: #cc4147;
-//   opacity: 0.4;
-// }
 
 export const SearchElem = styled.div<any>`
   min-width: 150px;
@@ -438,14 +427,6 @@ export const SearchButtons = styled.div<any>`
   display: flex;
   flex-direction: row-reverse;
 `
-// border-right: 1px solid #cc4147;
-// &:first-child {
-//   padding-left: 0;
-// }
-// &:last-child {
-//   padding-right: 0;
-//   border: 0;
-// }
 
 export const SearchSelect = styled.select<any>`
   padding: 3px 3px;

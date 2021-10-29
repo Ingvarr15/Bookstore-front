@@ -94,6 +94,7 @@ function App() {
   }, [])
 
   useEffect(() => {
+    console.log(location.pathname)
     dispatch(fetchUser())
     dispatch(setChapter(location.pathname))
   }, [])
