@@ -155,9 +155,12 @@ const BookCard = ({item}: any) => {
   const role = useAppSelector(state => state.user.role)
 
   const handleDelete = async () => {
-    const res = await deleteBookReq(item.id)
-    if (res.status === 204) {
-      history.push('/')
+    try {
+      const res = await deleteBookReq(item.id)
+      if (res.status === 204) {
+        history.push('/')
+      }
+    } catch (error) {
     }
   }
 
@@ -199,17 +202,23 @@ const BookCard = ({item}: any) => {
   }
 
   const handleDeleteComment = async (id: number) => {
-    const res: any = await deleteCommentReq(id)
-    if (res.status === 201) {
+    try {
+      const res: any = await deleteCommentReq(id)
+      if (res.status === 201) {
       dispatch(fetchComments())
+    }
+    } catch(error) {
     }
   }
 
   const handleChangeRadio = async (e: any) => {
-    const res: any = await setRatingReq(item.id, e.target.id)
-    if (res && res.status === 200) {
-      dispatch(fetchBooks())
-      dispatch(fetchUser())
+    try {
+      const res: any = await setRatingReq(item.id, e.target.id)
+      if (res && res.status === 200) {
+        dispatch(fetchBooks())
+        dispatch(fetchUser())
+      }
+    } catch (error) {
     }
   }
 

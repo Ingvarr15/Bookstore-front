@@ -46,43 +46,58 @@ const initialState: UserType = {
 export const fetchUser = createAsyncThunk(
   'user/fetchUserStatus',
   async () => {
-    const res = await getUserReq()
-    return res.data
+    try {
+      const res = await getUserReq()
+      return res.data
+    } catch(error) {
+    }
   }
 )
 
 export const fetchToken = createAsyncThunk(
   'user/fetchTokenStatus',
   async () => {
-    const res = await checkToken()
-    return res.data
+    try {
+      const res = await checkToken()
+      return res.data
+    } catch(error) {
+    }
   }
 )
 
 export const fetchReplies = createAsyncThunk(
   'user/fetchRepliesStatus',
   async (_, api) => {
-    let state: any = api.getState()
-    const res = await getRepliesReq(state.user.id)
-    return res.data
+    try {
+      let state: any = api.getState()
+      const res = await getRepliesReq(state.user.id)
+      return res.data
+    } catch(error) {
+    }
   }
 )
 
 export const checkReplies = createAsyncThunk(
   'user/checkRepliesStatus',
   async (_, api) => {
-    let state: any = api.getState()
-    const res = await checkRepliesReq(state.user.id)
-    return res.data
+    try {
+      let state: any = api.getState()
+      const res = await checkRepliesReq(state.user.id)
+      return res.data
+    } catch(error) {
+    }
   }
 )
 
 export const sendSocket = createAsyncThunk(
 	'user/sendSocketStatus',
 	async (_, api) => {
-		let state: any = api.getState()
-		const res = await setSocketReq(state.user.email, state.user.socket)
-		return res.data
+    try {
+      let state: any = api.getState()
+      const res = await setSocketReq(state.user.email, state.user.socket)
+      return res.data 
+    } catch(error) {
+    }
 	}
 )
 

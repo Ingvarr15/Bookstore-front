@@ -43,16 +43,19 @@ const SignUp = () => {
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const res: any = await signUpReq(username, email, password, date)
-    if (res && res.status === 200) {
-      setError('')
-      dispatch(
-        setIsAuthorized(true)
-      )
-      history.push('/user')
-    } else {
-      setError(res)
+    try {
+      e.preventDefault()
+      const res: any = await signUpReq(username, email, password, date)
+      if (res && res.status === 200) {
+        setError('')
+        dispatch(
+          setIsAuthorized(true)
+        )
+        history.push('/user')
+      } else {
+        setError(res)
+      }
+    } catch (error) {
     }
   }
 

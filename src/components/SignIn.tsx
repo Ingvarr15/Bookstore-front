@@ -33,19 +33,22 @@ const SignIn = () => {
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const res: any = await signInReq(email, password)
-    if (res && res.status === 200) {
-      history.push('/')
-      setError('')
-      dispatch(
-        fetchToken()
-      )
-      dispatch(
-        fetchUser()
-      )
-    } else {
-      setError(res)
+    try {
+      e.preventDefault()
+      const res: any = await signInReq(email, password)
+      if (res && res.status === 200) {
+        history.push('/')
+        setError('')
+        dispatch(
+          fetchToken()
+        )
+        dispatch(
+          fetchUser()
+        )
+      } else {
+        setError(res)
+      }
+    } catch(error) {
     }
   }
 

@@ -90,8 +90,9 @@ const UserCard = () => {
   const fileRef = useRef<any>(null)
 
   const handleSubmit = async (e:any) => {
-    e.preventDefault()
-    let res
+    try {
+      e.preventDefault()
+      let res
       if (e.target.id === 'avatar-button') {
         const fetchData = async (uint8Array: any) => {
           try {
@@ -154,6 +155,8 @@ const UserCard = () => {
       } else if (res) {
         setError(res)
       }
+    } catch (error) {
+    }
   }
 
   const handleCancel = () => {
@@ -162,11 +165,14 @@ const UserCard = () => {
   }
 
   const handleSignOut = async () => {
-    const res: any = await signOutReq()
-    if (res && res.status === 200) {
-      dispatch(
-        setIsAuthorized(false)
-      )
+    try {
+      const res: any = await signOutReq()
+      if (res && res.status === 200) {
+        dispatch(
+          setIsAuthorized(false)
+        )
+      }
+    } catch (error) {
     }
   }
 

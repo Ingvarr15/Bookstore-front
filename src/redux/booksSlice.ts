@@ -37,18 +37,24 @@ const initialState: Books = {
 export const fetchBooks = createAsyncThunk(
   'books/fetchStatus',
   async (_, api) => {
-    let state: any = api.getState()
-    const res = await getBooksReq(state.books.sortBy, state.books.order, state.books.filterBy, state.books.from, state.books.to, state.books.filterValue, state.books.page)
-    return res.data
+    try {
+      let state: any = api.getState()
+      const res = await getBooksReq(state.books.sortBy, state.books.order, state.books.filterBy, state.books.from, state.books.to, state.books.filterValue, state.books.page)
+      return res.data
+    } catch (error) {
+    }
   }
 )
 
 export const fetchOneBook = createAsyncThunk(
   'books/fetchOneStatus',
   async (_, api) => {
-    let state: any = api.getState()
-    const res = await getOneBookReq(state.comments.bookId)
-    return res
+    try {
+      let state: any = api.getState()
+      const res = await getOneBookReq(state.comments.bookId)
+      return res
+    } catch(error) {
+    }
   }
 )
 

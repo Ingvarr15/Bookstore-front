@@ -132,10 +132,10 @@ function App() {
           })
   }, [page, orderState, sortState, filterByState, filterValueState, fromState, toState, history])
 
-  const checkTokenFunc = useCallback(async () => {
-    dispatch(
-          fetchToken()
-        )
+  const checkTokenFunc = useCallback(() => {
+      dispatch(
+        fetchToken()
+      )
   }, [dispatch])
 
   useEffect(() => {
@@ -147,32 +147,19 @@ function App() {
     }
   }, [page, orderState, sortState, filterByState, filterValueState, fromState, toState, chapter, dispatch, setURL])
 
-  // function setURL() {
-  //     history.push({
-  //       pathname: '/',
-  //       search: '?' + params.page + '&' + params.order + '&' + params.sortBy +
-  //       (filterByState ? '&' + params.filterByState : '') + 
-  //       (filterValueState ? '&' + params.filterValueState : '') + 
-  //       (fromState ? '&' + params.fromState : '') + 
-  //       (toState ? '&' + params.toState : '')
-  //     })
-  // }
   useEffect(() => {
     checkTokenFunc()
   }, [checkTokenFunc])
-
-  // async function checkTokenFunc() {
-  //   dispatch(
-  //     fetchToken()
-  //   )
-  // }
 
   const changeChapter = (path: string) => {
     dispatch(setChapter(path))
   }
 
   const checkRepliesFunc = async () => {
-    await dispatch(checkReplies())
+    try {
+      await dispatch(checkReplies())
+    } catch(error) {
+    }
   }
 
   const handleRepliesToggle = () => {
