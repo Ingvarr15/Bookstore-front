@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useAppSelector, useAppDispatch } from '../redux/hooks'
+import { useAppDispatch } from '../redux/hooks'
 import { setIsAuthorized } from '../redux/userSlice'
 import { useHistory, useLocation } from 'react-router-dom'
 import { signUpReq } from '../api/auth/signUpReq'
@@ -22,11 +22,10 @@ const SignUp = () => {
   const dispatch = useAppDispatch()
   const history = useHistory()
   const location = useLocation()
-  const isAuthorized = useAppSelector(state => state.user.isAuthorized)
 
   useEffect(() => {
     dispatch(setChapter(location.pathname))
-  }, [])
+  }, [dispatch, location.pathname])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.currentTarget.type === 'text') {

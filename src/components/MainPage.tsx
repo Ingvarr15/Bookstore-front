@@ -115,7 +115,7 @@ const MainPage = () => {
   useEffect(() => {
     dispatch(setChapter(location.pathname))
     dispatch(resetComments())
-  }, [])
+  }, [dispatch, location.pathname])
 
   useEffect(() => {
     localDispatch({ type: 'sort', payload: sortState })
@@ -131,11 +131,11 @@ const MainPage = () => {
 
   useEffect(() => {
     dispatch(changeOrder(data.order))
-  }, [data.order])
+  }, [dispatch, data.order])
 
   useEffect(() => {
     dispatch(changeSort(data.sort))
-  }, [data.sort])
+  }, [dispatch, data.sort])
 
   const handleChangeOrder = () => {
     localDispatch({ type: 'order', payload: data.order === 'asc' ? 'desc' : 'asc' })

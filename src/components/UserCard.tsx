@@ -1,5 +1,5 @@
 import { useAppSelector, useAppDispatch } from '../redux/hooks'
-import { fetchUser, reset, setIsAuthorized } from '../redux/userSlice'
+import { fetchUser, setIsAuthorized } from '../redux/userSlice'
 import { useLocation } from 'react-router-dom'
 import { signOutReq } from '../api/auth/signOutReq'
 import { editUserReq } from '../api/user/editUserReq'
@@ -41,12 +41,11 @@ const UserCard = () => {
   const role = useAppSelector(state => state.user.role)
   const isExists = useAppSelector(state => state.user.isExists)
   const avatar = useAppSelector(state => state.user.avatar)
-  const isAuthorized = useAppSelector(state => state.user.isAuthorized)
 
   useEffect(() => {
     dispatch(fetchUser())
     dispatch(setChapter(location.pathname))
-  }, [])
+  }, [dispatch, location.pathname])
 
   useEffect(() => {
     if (isExists === false) {
@@ -54,7 +53,7 @@ const UserCard = () => {
         setIsAuthorized(false)
       )
     }
-  }, [isExists])
+  }, [dispatch, isExists])
 
   const handleChange = (e:any) => {
     if (e.currentTarget.id === 'secondInp') {

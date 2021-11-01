@@ -1,8 +1,7 @@
-import { useEffect, useReducer, useRef, useState } from "react"
+import { useCallback, useEffect, useReducer, useRef } from "react"
 import { useHistory, useLocation } from "react-router-dom"
 import { deleteBookReq } from "../api/book/deleteBookReq"
 import { deleteCommentReq } from "../api/comments/deleteCommentReq"
-import { getOneBookReq } from "../api/user/getOneBookReq"
 import { setRatingReq } from "../api/book/setRatingReq"
 import { fetchBooks, setChapter } from "../redux/booksSlice"
 import { fetchComments, setBookId, setText, postComment, setReplyTo } from "../redux/commentSlice"
@@ -111,34 +110,23 @@ const BookCard = ({item}: any) => {
   const [data, localDispatch] = useReducer(reducer, initialState, resetState)
   const myRef: any = useRef()
 
-  useEffect(() => {
-    if (item === undefined) {
-      item = getItem()
-    }
-  }, [])
-
-  useEffect(() => {
-    localDispatch({ type: 'goldStars', payload: item.rating / 0.05 })
-    localDispatch({ type: 'userRating', payload: calculateUserRating() })
-  }, [booksList, userRatingsState])
-
-  const calculateUserRating = () => {
+  const calculateUserRating = useCallback(() => {
     const userRating = userRatingsState.find((rating: any) => rating.book === item.id)
     if (userRating !== undefined) {
       return userRating.rating / 0.05
     } else {
       return 0
     }
-  }
+  }, [item.id, userRatingsState])
 
-  const getItem = async () => {
-    const res = await getOneBookReq(location.pathname.split('/book/')[1])
-    return res
-  }
+  useEffect(() => {
+    localDispatch({ type: 'goldStars', payload: item.rating / 0.05 })
+    localDispatch({ type: 'userRating', payload: calculateUserRating() })
+  }, [booksList, userRatingsState, item.rating, calculateUserRating])
 
   useEffect(() => {
     dispatch(setBookId(item.id))
-  }, [])
+  }, [dispatch, item.id])
 
   useEffect(() => {
     if (commentTextState !== '') {
@@ -146,23 +134,23 @@ const BookCard = ({item}: any) => {
     } else if (commentTextState === '') {
       handleReplyOff()
     }
-  }, [commentTextState])
+  }, [dispatch, commentTextState])
 
   useEffect(() => {
     socket.on('newComment', () => {
       dispatch(fetchComments())
     })
-  }, [socket])
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(fetchComments())
     dispatch(setText(''))
-  }, [bookId])
+  }, [dispatch, bookId])
   
   useEffect(() => {
     dispatch(setChapter(location.pathname))
     dispatch(fetchUser())
-  }, [])
+  }, [dispatch, location.pathname])
   
   const role = useAppSelector(state => state.user.role)
 
@@ -202,7 +190,6 @@ const BookCard = ({item}: any) => {
     if (data.reply) {
       localDispatch({ type: 'setReply' })
       localDispatch({ type: 'replyTarget', payload: '' })
-
       dispatch(setReplyTo(''))
     }
   }

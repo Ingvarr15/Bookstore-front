@@ -1,10 +1,9 @@
-import { useEffect, useReducer, useRef, useState } from "react"
+import { useCallback, useEffect, useReducer, useRef } from "react"
 import { useHistory, useLocation } from "react-router-dom"
 import { deleteBookReq } from "../api/book/deleteBookReq"
 import { deleteCommentReq } from "../api/comments/deleteCommentReq"
-import { getOneBookReq } from "../api/user/getOneBookReq"
 import { setRatingReq } from "../api/book/setRatingReq"
-import { fetchBooks, fetchOneBook, setChapter } from "../redux/booksSlice"
+import { fetchOneBook, setChapter } from "../redux/booksSlice"
 import { fetchComments, setBookId, setText, postComment, setReplyTo } from "../redux/commentSlice"
 import { useAppSelector, useAppDispatch } from "../redux/hooks"
 import { fetchUser } from "../redux/userSlice"
@@ -99,7 +98,6 @@ const initialState = {
 
 const OneBookCard = () => {
   const dispatch = useAppDispatch()
-  const booksList = useAppSelector(state => state.books.items)
   const commentsList = useAppSelector(state => state.comments.items)
   const commentTextState = useAppSelector(state => state.comments.text)
   const bookId = useAppSelector(state => state.comments.bookId)
@@ -120,39 +118,48 @@ const OneBookCard = () => {
     dispatch(setBookId(+location.pathname.split('/book/')[1]))
     dispatch(setChapter(location.pathname))
     dispatch(fetchUser())
-  }, [])
+  }, [dispatch, location.pathname])
 
   useEffect(() => {
     dispatch(fetchOneBook())
     dispatch(fetchComments())
     dispatch(setText(''))
-  }, [bookId])
+  }, [dispatch, bookId])
 
-  useEffect(() => {
-    localDispatch({ type: 'goldStars', payload: item.rating / 0.05 })
-    localDispatch({ type: 'userRating', payload: calculateUserRating() })
-  }, [item, userRatingsState])
-
-  const calculateUserRating = () => {
+  const calculateUserRating = useCallback(() => {
     const userRating = userRatingsState.find((rating: any) => rating.book === item.id)
     if (userRating !== undefined) {
       return userRating.rating / 0.05
     } else {
       return 0
     }
-  }
+  }, [item.id, userRatingsState])
+
+  // const calculateUserRating = () => {
+  //   const userRating = userRatingsState.find((rating: any) => rating.book === item.id)
+  //   if (userRating !== undefined) {
+  //     return userRating.rating / 0.05
+  //   } else {
+  //     return 0
+  //   }
+  // }
+
+  useEffect(() => {
+    localDispatch({ type: 'goldStars', payload: item.rating / 0.05 })
+    localDispatch({ type: 'userRating', payload: calculateUserRating() })
+  }, [item, userRatingsState, calculateUserRating])
 
   useEffect(() => {
     if (commentTextState !== '') {
       dispatch(postComment())
     }
-  }, [commentTextState])
+  }, [dispatch, commentTextState])
 
   useEffect(() => {
     socket.on('newComment', () => {
       dispatch(fetchComments())
     })
-  }, [socket]) 
+  }, [dispatch]) 
   
   const handleDelete = async () => {
     const res = await deleteBookReq(item.id)

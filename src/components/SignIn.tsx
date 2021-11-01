@@ -21,7 +21,7 @@ const SignIn = () => {
   
   useEffect(() => {
     dispatch(setChapter(location.pathname))
-  }, [])
+  }, [dispatch, location.pathname])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.currentTarget.type === 'email') {

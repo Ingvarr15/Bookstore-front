@@ -83,7 +83,6 @@ function App() {
   }, [dispatch, location.search])
 
   useEffect(() => {
-    console.log(location.pathname)
     dispatch(fetchUser())
     dispatch(setChapter(location.pathname))
   }, [location.pathname, dispatch])
