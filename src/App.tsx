@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useAppSelector, useAppDispatch } from './redux/hooks'
 import { useEffect, useState } from 'react'
 import { changeOrder, changeSort, fetchBooks, setBookSearch, setChapter, setPage } from './redux/booksSlice'
@@ -6,7 +6,6 @@ import { changeOrder, changeSort, fetchBooks, setBookSearch, setChapter, setPage
 import {
   Switch,
   Route,
-  Link,
   generatePath,
   Redirect,
   useHistory,
@@ -58,17 +57,7 @@ function App() {
   const repliesCountState = useAppSelector(state => state.user.repliesCount)
   const [isRepliesShown, setIsRepliesShown] = useState(false);
   const history = useHistory()
-    
-  const params = {
-    page: `page=${page}`,
-    order: `order=${orderState}`,
-    sortBy: `sortBy=${sortState}`,
-    filterByState: `filterBy=${filterByState}`,
-    filterValueState: `value=${filterValueState}`,
-    fromState: `from=${fromState}`,
-    toState: `to=${toState}`
-  }
-
+  
   useEffect(() => {
     let query = new URLSearchParams(location.search)
     if (query.get('page') &&
@@ -91,13 +80,13 @@ function App() {
         to: query.get('to') ? query.get('to') : ''
       }))
     }
-  }, [])
+  }, [dispatch, location.search])
 
   useEffect(() => {
     console.log(location.pathname)
     dispatch(fetchUser())
     dispatch(setChapter(location.pathname))
-  }, [])
+  }, [location.pathname, dispatch])
   
   useEffect(() => {
     socket.on('newReply', () => {
@@ -105,14 +94,14 @@ function App() {
         dispatch(fetchReplies())
       }
     })
-  }, [idState])
+  }, [idState, dispatch])
 
   useEffect(() => {
     if (socketState !== '' && emailState !== '' && emailState !== '...') {
       dispatch(sendSocket())
       dispatch(fetchReplies())
     }
-  }, [socketState, emailState])
+  }, [socketState, emailState, dispatch])
 
   useEffect(() => {
     setIsRepliesShown(false)
@@ -122,7 +111,33 @@ function App() {
     socket.on('newConnection', () => {
       dispatch(setSocket(socket.id))
     })
-  }, [socket])
+  }, [dispatch])
+
+  const setURL = useCallback(() => {
+    const params = {
+      page: `page=${page}`,
+      order: `order=${orderState}`,
+      sortBy: `sortBy=${sortState}`,
+      filterByState: `filterBy=${filterByState}`,
+      filterValueState: `value=${filterValueState}`,
+      fromState: `from=${fromState}`,
+      toState: `to=${toState}`
+    }
+    history.push({
+            pathname: '/',
+            search: '?' + params.page + '&' + params.order + '&' + params.sortBy +
+            (filterByState ? '&' + params.filterByState : '') + 
+            (filterValueState ? '&' + params.filterValueState : '') + 
+            (fromState ? '&' + params.fromState : '') + 
+            (toState ? '&' + params.toState : '')
+          })
+  }, [page, orderState, sortState, filterByState, filterValueState, fromState, toState, history])
+
+  const checkTokenFunc = useCallback(async () => {
+    dispatch(
+          fetchToken()
+        )
+  }, [dispatch])
 
   useEffect(() => {
     if (chapter === '/') {
@@ -131,35 +146,34 @@ function App() {
     } else if (chapter !== '/') {
       dispatch(fetchBooks())
     }
-  }, [page, orderState, sortState, filterByState, filterValueState, fromState, toState, chapter])
+  }, [page, orderState, sortState, filterByState, filterValueState, fromState, toState, chapter, dispatch, setURL])
 
-  function setURL() {
-      history.push({
-        pathname: '/',
-        search: '?' + params.page + '&' + params.order + '&' + params.sortBy +
-        (filterByState ? '&' + params.filterByState : '') + 
-        (filterValueState ? '&' + params.filterValueState : '') + 
-        (fromState ? '&' + params.fromState : '') + 
-        (toState ? '&' + params.toState : '')
-      })
-  }
-
+  // function setURL() {
+  //     history.push({
+  //       pathname: '/',
+  //       search: '?' + params.page + '&' + params.order + '&' + params.sortBy +
+  //       (filterByState ? '&' + params.filterByState : '') + 
+  //       (filterValueState ? '&' + params.filterValueState : '') + 
+  //       (fromState ? '&' + params.fromState : '') + 
+  //       (toState ? '&' + params.toState : '')
+  //     })
+  // }
   useEffect(() => {
     checkTokenFunc()
-  }, [])
+  }, [checkTokenFunc])
 
-  async function checkTokenFunc() {
-    dispatch(
-      fetchToken()
-    )
-  }
+  // async function checkTokenFunc() {
+  //   dispatch(
+  //     fetchToken()
+  //   )
+  // }
 
   const changeChapter = (path: string) => {
     dispatch(setChapter(path))
   }
 
   const checkRepliesFunc = async () => {
-    const res = await dispatch(checkReplies())
+    await dispatch(checkReplies())
   }
 
   const handleRepliesToggle = () => {
