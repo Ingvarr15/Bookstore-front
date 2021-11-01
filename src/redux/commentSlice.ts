@@ -23,24 +23,18 @@ const initialState: Comments = {
 export const fetchComments = createAsyncThunk(
 	'comments/fetchStatus',
 	async (_, api) => {
-		try {
-			let state: any = await api.getState()
-			const res = await getCommentsReq(state.comments.bookId)
-			return res.data
-		} catch(error) {
-		}
+		let state: any = await api.getState()
+		const res = await getCommentsReq(state.comments.bookId)
+		return res.data
 	}
 )
 
 export const postComment = createAsyncThunk(
 	'comments/postStatus',
 	async (_, api) => {
-		try {
-			let state: any = api.getState()
-			const res = await postCommentReq(state.comments.bookId, state.comments.text, state.comments.replyTo)
-			return res.data
-		} catch(error) {	
-		}
+		let state: any = api.getState()
+		const res = await postCommentReq(state.comments.bookId, state.comments.text, state.comments.replyTo)
+		return res.data
 	}
 )
 

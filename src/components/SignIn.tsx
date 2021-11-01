@@ -33,8 +33,8 @@ const SignIn = () => {
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     try {
-      e.preventDefault()
       const res: any = await signInReq(email, password)
       if (res && res.status === 200) {
         history.push('/')

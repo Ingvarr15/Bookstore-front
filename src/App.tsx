@@ -85,7 +85,7 @@ function App() {
   useEffect(() => {
     dispatch(fetchUser())
     dispatch(setChapter(location.pathname))
-  }, [location.pathname, dispatch])
+  }, [])
   
   useEffect(() => {
     socket.on('newReply', () => {

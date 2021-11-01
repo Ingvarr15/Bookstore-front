@@ -28,23 +28,31 @@ const SignUp = () => {
   }, [dispatch, location.pathname])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.currentTarget.type === 'text') {
-      setUsername(e.currentTarget.value)
-    }
-    if (e.currentTarget.type === 'email') {
-      setEmail(e.currentTarget.value)
-    }
-    if (e.currentTarget.type === 'password') {
-      setPassword(e.currentTarget.value)
-    }
-    if (e.currentTarget.type === 'date') {
-      setDate(e.currentTarget.value)
+    switch(e.currentTarget.type) {
+      case 'text':
+        setUsername(e.currentTarget.value)
+        break
+      case 'email':
+        setEmail(e.currentTarget.value)
+        break
+      case 'password':
+        setPassword(e.currentTarget.value)
+        break
+      case 'date':
+        setDate(e.currentTarget.value)
+        break
     }
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     try {
-      e.preventDefault()
+      const selectedYear = +date.substring(0, 4)
+      const currentYear = new Date().getFullYear()
+      if ((currentYear - selectedYear) < 7 || selectedYear < 1900) {
+        setError('Select a valid date')
+        return
+      }
       const res: any = await signUpReq(username, email, password, date)
       if (res && res.status === 200) {
         setError('')

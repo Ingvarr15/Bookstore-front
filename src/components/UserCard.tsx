@@ -142,7 +142,14 @@ const UserCard = () => {
         }
       }
       else if (e.target.id === 'dob-button') {
-        res = await editUserReq('dob', inputValue)
+        const selectedYear = +inputValue.substring(0, 4)
+        const date = new Date().getFullYear()
+        if ((date - selectedYear) < 7 || selectedYear < 1900) {
+          setError('Select a valid date')
+          return
+        } else {
+          res = await editUserReq('dob', inputValue)
+        }
       }
       setInputValue('')
       if (res && res.status === 200) {
